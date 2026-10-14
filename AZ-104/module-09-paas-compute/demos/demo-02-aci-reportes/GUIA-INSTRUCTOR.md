@@ -15,7 +15,7 @@ az version
 azd auth login
 az login
 ```
-La imagen pública oficial Python se descarga de Docker Hub. El código y el CSV inicial se incorporan desde archivos del proyecto a la plantilla Bicep. Esta simplificación es para el laboratorio; en una implementación productiva se construiría una imagen propia versionada y se almacenaría en un registro como ACR.
+La imagen de Python se descarga de Microsoft Container Registry (MCR): mcr.microsoft.com/devcontainers/python:3.12-bookworm. No requiere cuenta de Docker Hub. Es una imagen de desarrollo más grande que una imagen mínima; se usa para este laboratorio. El código y el CSV inicial se incorporan desde archivos del proyecto a la plantilla Bicep. Esta simplificación es para el laboratorio; en una implementación productiva se construiría una imagen propia versionada y se almacenaría en un registro como ACR.
 
 ## 2. Entorno independiente
 Usar una suscripción con permisos para crear grupos y recursos de Storage/ACI. La suscripción que funcionó para S1 puede ser el primer ensayo, pero ACI tiene su propia cuota.
@@ -68,7 +68,7 @@ Resultado: contenedor Terminated, salida 0, log Trabajo completado, total Bs 6,6
 2. Abrir aci-reportes-demo.
 3. Entrar a Containers / Contenedores.
 4. Seleccionar generador y mostrar Properties / Propiedades, Events / Eventos y Logs / Registros.
-5. Si ya terminó, usar Restart / Reiniciar del grupo para repetirlo. Si Restart está deshabilitado y aparece Start / Iniciar, usar Start. Esperar y refrescar Logs durante la pausa.
+5. Si ya terminó, desde PowerShell ejecutar .\scripts\Ejecutar.ps1 (az container start). También puede usarse Start / Iniciar si está disponible en el portal. Refrescar Logs durante la pausa.
 6. Al finalizar revisar el estado del CONTENEDOR y exit code 0. El estado del grupo o del aprovisionamiento puede indicar Succeeded: no es lo mismo que el estado del proceso.
 
 Qué decir: “No necesitamos una aplicación atendiendo las 24 horas. Este contenedor tiene una tarea: leer datos, generar archivos y terminar”.
@@ -94,25 +94,37 @@ No esperar que Azure Files publique una URL de sitio web. Se descarga el HTML y 
 Qué decir: “El cómputo terminó; el almacenamiento tiene un ciclo de vida independiente”.
 
 ## 7. Cambiar los datos y volver a ejecutar
-Hacerlo con el contenedor terminado, para evitar editar mientras lee.
+Con el contenedor terminado, preparar el CSV desde PowerShell para preservar las fechas ISO. No abrir y guardar el CSV con Excel: puede convertir 2026-10-01 en 10/1/2026.
 
-1. En reportes descargar ventas.csv.
-2. Abrirlo con Bloc de notas para preservar encabezados y valores.
-3. Agregar al final una nueva línea:
-
-```csv
-2026-10-07,Centro,Audifonos,1,300
+```powershell
+$CsvDemo = Join-Path $env:TEMP "ventas.csv"
+$texto = (Get-Content .\data\ventas.csv -Raw).TrimEnd()
+$texto += "`r`n2026-10-07,Centro,Audifonos,1,300`r`n"
+Set-Content -Path $CsvDemo -Value $texto -Encoding utf8
+Start-Process explorer.exe -ArgumentList "/select,`"$CsvDemo`""
 ```
 
-4. Guardar como UTF-8, manteniendo el nombre ventas.csv.
-5. En reportes pulsar Upload / Cargar, seleccionar ese archivo y confirmar sobreescritura. Si pide sobrescribir, aceptar únicamente ventas.csv.
-6. Volver a aci-reportes-demo y usar Restart o Start según esté habilitado.
-7. Observar los logs: “Usando ventas.csv existente”. Esperar la finalización.
-8. Descargar nuevamente reporte-actual.html y abrir la descarga nueva (no el archivo anterior del navegador).
-9. Resultado: Bs 6.900, 33 unidades, 13 registros. Centro sube a Bs 2.400; Norte sigue líder con Bs 2.700.
-10. En reportes quedan los reportes de ejecuciones anteriores. El actual se sobrescribe, el historial no.
+1. En Azure Files > reportes > Browse usar Upload y seleccionar el ventas.csv generado en TEMP.
+2. Sobrescribir únicamente ventas.csv.
+3. Ejecutar el trabajo otra vez desde la carpeta del demo:
 
-Qué decir: “Reutilizamos el mismo contenedor y procesamos nuevos datos. El archivo de entrada está fuera del contenedor y los resultados quedan registrados por ejecución”.
+```powershell
+.\scripts\Ejecutar.ps1
+```
+
+4. Esperar aproximadamente un minuto y consultar:
+
+```powershell
+.\scripts\Verificar.ps1
+```
+
+5. Comprobar nuevas fechas e identificador, “Usando ventas.csv existente”, salida 0, 13 registros, 33 unidades y Bs 6.900.
+6. Descargar de nuevo reporte-actual.html y abrir la descarga nueva.
+7. Confirmar que permanecen los reportes anteriores. Centro pasa a Bs 2.400; Norte sigue líder con Bs 2.700.
+
+Verificar.ps1 solo consulta estado y logs; no inicia el trabajo. Ejecutar.ps1 usa az container start, probado después de terminar con restartPolicy Never.
+
+Qué decir: “Reutilizamos el contenedor con datos nuevos. El archivo de entrada queda fuera del contenedor y cada ejecución conserva su resultado”.
 
 ## 8. Prueba opcional: borrar solo el cómputo
 Después de comprobar reportes y logs, en el recurso aci-reportes-demo usar Delete / Eliminar. Eliminar solo este recurso, no el grupo ni Storage. Volver al recurso compartido: los archivos siguen ahí. azd up puede recrear ACI; conservará el CSV modificado porque Storage no se borró. Reaplicar infraestructura puede volver a ejecutar el trabajo, por lo que no usarlo accidentalmente durante el guion.
@@ -120,7 +132,7 @@ Después de comprobar reportes y logs, en el recurso aci-reportes-demo usar Dele
 Esta prueba es más clara que reiniciar: el contenedor dejó de existir y el reporte sigue disponible. No eliminar Storage si se quiere demostrar persistencia.
 
 ## 9. Diagnóstico
-- Image pull / toomanyrequests: revisar Events. Docker Hub puede limitar descargas; no es una falla del script. Reintentar o preparar una imagen en ACR como variante después de validar el ensayo.
+- Image pull: revisar Events y conectividad con mcr.microsoft.com. La versión anterior usaba Docker Hub y falló por límite de descargas anónimas HTTP 429; la plantilla actual usa MCR. No crear ACR ni solicitar cuenta Docker Hub para este demo.
 - Cuota/capacidad ACI: revisar el error de Microsoft.ContainerInstance. Elegir otra región con un entorno nuevo si hace falta; no cambiar la región de un grupo ya creado.
 - Mount failure: revisar Events y que exista reportes, que la cuenta permita shared key y conectividad SMB. La plantilla usa Linux como root, requerido para este montaje.
 - Exit code 1: leer los logs. CSV inválido falla explícitamente en lugar de generar un reporte incorrecto. El archivo anterior puede seguir existiendo: verificar fecha e identificador para no confundirlo con una ejecución nueva.
@@ -137,7 +149,16 @@ azd down
 Confirmar que el grupo corresponde a este laboratorio. Esto elimina también Storage, entrada e historial. No usar antes de terminar la demostración de persistencia.
 
 ## Validación
-Pruebas locales: CSV válido, totales por sucursal, valores inválidos, historial de dos ejecuciones, conservación del CSV y tercera ejecución con una venta nueva. Validación Azure del instructor (14/10/2026, eastus2): Bicep compiló tras representar la memoria decimal como json('1.5'); azd up completó en 1 min 23 s. El contenedor terminó con exit code 0, procesó 12 registros y 32 unidades por Bs 6.600 y confirmó la escritura de HTML/JSON en Azure Files. Pendientes: abrir el HTML descargado, probar Start/Restart, modificar el CSV y comprobar persistencia e historial.
+Ensayo del instructor confirmado el 14/10/2026 en eastus2:
+- Bicep compila con cpu: 1 y memoryInGB: json('1.5').
+- Despliegue con MCR completado en 2 min 14 s.
+- Primera ejecución: salida 0, 12 registros, 32 unidades, Bs 6.600.
+- Segunda ejecución con az container start: salida 0, CSV existente conservado y nuevo reporte.
+- CSV con fecha 10/1/2026: salida 1 y diagnóstico de fila inválida.
+- Recuperación con CSV ISO y venta adicional: salida 0, 13 registros, 33 unidades, Bs 6.900.
+- Instructor confirmó que la prueba funcionó. Comparar los archivos históricos y descargar el HTML durante cada ensayo.
+La eliminación exclusiva del recurso ACI (sección 8) es una prueba opcional aún no confirmada en este ensayo.
+Pruebas locales previas cubrieron totales, datos inválidos e historial. MCR y Azure Files fueron comprobados mediante los logs compartidos por el instructor.
 
 ## Referencias
 https://learn.microsoft.com/azure/container-instances/container-instances-restart-policy

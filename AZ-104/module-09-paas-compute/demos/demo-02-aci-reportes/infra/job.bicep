@@ -35,7 +35,7 @@ resource group 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
       {
         name: 'generador'
         properties: {
-          image: 'python:3.12-slim-bookworm'
+          image: 'mcr.microsoft.com/devcontainers/python:3.12-bookworm'
           command: [
             'python'
             '-u'
