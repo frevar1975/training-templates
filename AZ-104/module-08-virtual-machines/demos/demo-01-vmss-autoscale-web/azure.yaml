@@ -1,0 +1,5 @@
+name: az104-escalado-web
+infra:
+  provider: bicep
+  path: infra
+  module: main
