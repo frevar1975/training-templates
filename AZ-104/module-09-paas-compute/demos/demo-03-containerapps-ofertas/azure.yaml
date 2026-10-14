@@ -1,0 +1,7 @@
+name: az104-containerapps-ofertas
+metadata:
+  template: az104-containerapps-ofertas@0.1.0
+infra:
+  provider: bicep
+  path: infra
+  module: main

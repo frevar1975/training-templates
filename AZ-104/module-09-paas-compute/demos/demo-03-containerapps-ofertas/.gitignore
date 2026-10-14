@@ -1,0 +1,5 @@
+.azure/
+__pycache__/
+*.pyc
+*.bak
+infra/main.json
