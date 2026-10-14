@@ -1,5 +1,6 @@
 # AZ-104 · Plantillas de formación
 
-Código y guías reutilizables entre centros y ediciones del curso. Usar un entorno de azd independiente por ejecución. Las notas específicas de cada edición corresponden a training-delivery.
+Laboratorios reutilizables entre centros y ediciones. Usar un entorno azd independiente por curso o grupo. Las notas de cada edición se guardan en training-delivery.
 
+- [Módulo 8: web participativa con VMSS y autoscaling](module-08-virtual-machines/demos/demo-01-vmss-autoscale-web/README.md)
 - [Módulo 9: App Service slots, swap, recuperación y tráfico gradual](module-09-paas-compute/demos/demo-01-appservice-slots/README.md)

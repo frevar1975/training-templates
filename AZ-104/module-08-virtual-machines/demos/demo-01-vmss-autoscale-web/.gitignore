@@ -1,0 +1,5 @@
+.azure/
+url-demo.txt
+__pycache__/
+*.pyc
+compiled.json
