@@ -1,0 +1,7 @@
+name: az104-aci-reportes
+metadata:
+  template: az104-aci-reportes@0.1.0
+infra:
+  provider: bicep
+  path: infra
+  module: main

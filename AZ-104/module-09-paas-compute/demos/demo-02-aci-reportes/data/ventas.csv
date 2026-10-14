@@ -1,0 +1,13 @@
+fecha,sucursal,producto,cantidad,precio_unitario
+2026-10-01,Centro,Audifonos,2,300
+2026-10-01,Norte,Teclado,1,400
+2026-10-02,Sur,Mouse,5,100
+2026-10-02,Centro,Teclado,2,400
+2026-10-03,Norte,Audifonos,3,300
+2026-10-03,Sur,Teclado,1,400
+2026-10-04,Centro,Mouse,4,100
+2026-10-04,Norte,Mouse,6,100
+2026-10-05,Sur,Audifonos,2,300
+2026-10-05,Centro,Audifonos,1,300
+2026-10-06,Norte,Teclado,2,400
+2026-10-06,Sur,Mouse,3,100
