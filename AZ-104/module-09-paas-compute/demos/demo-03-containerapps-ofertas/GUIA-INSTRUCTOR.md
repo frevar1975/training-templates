@@ -75,6 +75,26 @@ Abrir otra vez la URL para demostrar el arranque desde cero. El identificador de
 - ACI: ejecutamos un trabajo y termina; Azure Files conserva resultados.
 - Container Apps: servicio HTTP con replicas segun demanda, incluida escala a cero.
 
+## Despliegue lento o interrumpido
+La creacion del entorno puede tardar varios minutos. En el ensayo se observo Waiting antes de que la app respondiera; no atribuirlo a una causa sin revisar detalles.
+
+Si se pulsa Ctrl+C y se elige dejar el despliegue ejecutandose, azd se detiene pero Azure continua. Los scripts pueden fallar por ausencia de AZURE_RESOURCE_GROUP o APPLICATION_URL: son salidas aun no sincronizadas, no evidencia de que la app fallo.
+
+Desde otra terminal revisar el despliegue con el nombre que imprimio azd:
+```powershell
+$Sub = (azd env get-value AZURE_SUBSCRIPTION_ID).Trim()
+az deployment sub show --subscription $Sub --name "<NOMBRE-DEL-DESPLIEGUE>" --query properties.provisioningState --output tsv
+```
+Si Succeeded: azd env refresh y luego Verificar.ps1/Obtener-Url.ps1. Si Failed consultar properties.error. Si sigue activo no iniciar otro azd up sobre ese entorno.
+
+Para diagnostico del entorno:
+```powershell
+$Rg = "rg-$((azd env get-value AZURE_ENV_NAME).Trim())"
+az containerapp env list --subscription $Sub -g $Rg --query "[].{Nombre:name,Estado:properties.provisioningState}" --output table
+```
+
+En este ensayo se cancelo el primer intento y se solicito eliminar su grupo; como la eliminacion seguia activa, se creo un entorno independiente az104-m09-containerapps-v2. Para repetir ese camino, seleccionar un nombre nuevo y configurar suscripcion/region antes de azd up. Cada entorno genera grupo y nombres diferentes. No garantiza mas velocidad; recursos aun eliminandose pueden ocupar cuota. Revisar y limpiar ambos grupos al finalizar.
+
 ## Logs y diagnostico
 ```powershell
 $Rg = (azd env get-value AZURE_RESOURCE_GROUP).Trim()
@@ -95,7 +115,14 @@ azd down
 Confirmar que el grupo es el de ESTE demo.
 
 ## Validacion
-Preparado para ensayo: servidor probado localmente, endpoints de salud/oferta, identificador de replica y solicitudes simultaneas. Infraestructura Bicep y scripts PowerShell pendientes de compilacion y ejecucion en Windows/Azure. El escalado real, arranque desde cero, cuota, portal y vuelta a cero deben validarse con el instructor antes de marcar como demo probado.
+Ensayo del instructor confirmado el 14/10/2026 en eastus2:
+- Bicep compilo sin errores.
+- Despliegue del entorno alternativo az104-m09-containerapps-v2 y tienda accesible, confirmado por el instructor.
+- Azure Portal > Active revisions mostro Running (at max) y 3 (Show replicas). Escalado a tres replicas confirmado visualmente.
+- El instructor confirmo que la prueba funciono.
+- Pendientes de evidencia: descenso a cero al retirar todo el trafico y nueva activacion desde cero. No marcar estas dos pruebas como completadas hasta observarlas.
+
+Pruebas locales: salud/HTML, ocho ofertas concurrentes, IDs y contadores unicos. Los scripts y la participacion de alumnos deben volver a ensayarse en la PC usada para cada clase.
 
 ## Referencias
 https://learn.microsoft.com/azure/container-apps/scale-app
