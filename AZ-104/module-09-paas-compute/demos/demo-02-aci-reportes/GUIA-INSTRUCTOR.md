@@ -137,7 +137,7 @@ azd down
 Confirmar que el grupo corresponde a este laboratorio. Esto elimina también Storage, entrada e historial. No usar antes de terminar la demostración de persistencia.
 
 ## Validación
-Pruebas locales: CSV válido, totales por sucursal, valores inválidos, historial de dos ejecuciones, conservación del CSV y tercera ejecución con una venta nueva. Falta compilar Bicep y ensayar ACI, descarga de imagen, montaje y operaciones Start/Restart en la suscripción del instructor. Publicado como demo en preparación; pendiente de validación en Azure.
+Pruebas locales: CSV válido, totales por sucursal, valores inválidos, historial de dos ejecuciones, conservación del CSV y tercera ejecución con una venta nueva. Validación Azure del instructor (14/10/2026, eastus2): Bicep compiló tras representar la memoria decimal como json('1.5'); azd up completó en 1 min 23 s. El contenedor terminó con exit code 0, procesó 12 registros y 32 unidades por Bs 6.600 y confirmó la escritura de HTML/JSON en Azure Files. Pendientes: abrir el HTML descargado, probar Start/Restart, modificar el CSV y comprobar persistencia e historial.
 
 ## Referencias
 https://learn.microsoft.com/azure/container-instances/container-instances-restart-policy
