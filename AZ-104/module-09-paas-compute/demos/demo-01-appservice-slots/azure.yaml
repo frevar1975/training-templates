@@ -1,0 +1,15 @@
+name: az104-tienda-slots
+metadata:
+  template: az104-tienda-slots@0.1.0
+infra:
+  provider: bicep
+  path: infra
+hooks:
+  preprovision:
+    shell: pwsh
+    run: ./scripts/Preflight.ps1
+    interactive: true
+  postprovision:
+    shell: pwsh
+    run: ./scripts/Publicar-Versiones.ps1
+    interactive: true

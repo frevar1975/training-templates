@@ -1,0 +1,4 @@
+.azure/
+.packages/
+node_modules/
+*.log
