@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo de agente Foundry</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div>
+        <p class="eyebrow">Microsoft Foundry</p>
+        <h1>Conversación con tu agente</h1>
+        <p class="intro">Escribe un mensaje y observa cómo responde el agente conectado.</p>
+      </div>
+      <span class="status"><i></i> Demo activa</span>
+    </header>
+
+    <section class="chat-panel" aria-label="Conversación">
+      <div id="messages" class="messages" aria-live="polite">
+        <div class="message agent-message">
+          <span class="avatar">F</span>
+          <div><small>Agente</small><p>Hola. Estoy listo para interactuar contigo.</p></div>
+        </div>
+      </div>
+      <form id="chat-form" class="composer">
+        <label class="sr-only" for="message-input">Escribe tu mensaje</label>
+        <input id="message-input" autocomplete="off" placeholder="Escribe un mensaje..." required>
+        <button type="submit">Enviar <span aria-hidden="true">↗</span></button>
+      </form>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector('#chat-form');
+    const input = document.querySelector('#message-input');
+    const messages = document.querySelector('#messages');
+
+    function addMessage(role, text) {
+      const item = document.createElement('div');
+      item.className = `message ${role === 'user' ? 'user-message' : 'agent-message'}`;
+      item.innerHTML = role === 'user'
+        ? `<div><small>Tú</small><p></p></div>`
+        : `<span class="avatar">F</span><div><small>Agente</small><p></p></div>`;
+      item.querySelector('p').textContent = text;
+      messages.appendChild(item);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+      addMessage('user', message);
+      input.value = '';
+      input.disabled = true;
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({message})
+        });
+        const data = await response.json();
+        addMessage('agent', response.ok ? data.reply : `Error: ${data.error}`);
+      } catch (error) {
+        addMessage('agent', 'No se pudo conectar con el servidor local.');
+      } finally {
+        input.disabled = false;
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
