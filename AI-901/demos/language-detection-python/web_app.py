@@ -1,4 +1,4 @@
-"""Demo web para explorar tareas de análisis de texto con Azure AI Language."""
+"""Aplicación web local para análisis de texto con Azure AI Language."""
 import os
 
 from azure.ai.textanalytics import TextAnalyticsClient
@@ -9,7 +9,6 @@ from flask import Flask, jsonify, render_template, request
 
 load_dotenv()
 app = Flask(__name__)
-
 MAX_TEXT_LENGTH = 5000
 
 
@@ -32,100 +31,54 @@ def home():
 def analyze():
     payload = request.get_json(silent=True) or {}
     text = str(payload.get("text", "")).strip()
-    task = str(payload.get("task", "")).strip()
+    operation = str(payload.get("operation", "language")).strip().lower()
 
     if not text:
-        return jsonify({"error": "Escribe o pega un texto para analizar."}), 400
+        return jsonify({"error": "Escribe un texto para analizar."}), 400
     if len(text) > MAX_TEXT_LENGTH:
-        return jsonify({"error": f"El texto supera el límite de {MAX_TEXT_LENGTH} caracteres."}), 400
+        return jsonify({"error": f"El texto no puede superar {MAX_TEXT_LENGTH} caracteres."}), 400
+    if operation not in {"language", "entities"}:
+        return jsonify({"error": "Selecciona un tipo de análisis válido."}), 400
 
     try:
         client = create_client()
-        document = {"id": "1", "text": text, "country_hint": "BO"}
+        if operation == "language":
+            result = client.detect_language(
+                documents=[{"id": "1", "text": text, "country_hint": "BO"}],
+                country_hint="BO",
+            )[0]
+            if result.is_error:
+                return jsonify({"error": result.error.message}), 400
+            language = result.primary_language
+            return jsonify({
+                "operation": "language",
+                "language": language.name,
+                "iso": language.iso6391_name,
+                "confidence": round(language.confidence_score * 100, 2),
+            })
 
-        if task == "language":
-            result = client.detect_language([document], country_hint="BO")[0]
-            if result.is_error:
-                return jsonify({"error": result.error.message}), 400
-            lang = result.primary_language
-            data = {
-                "title": "Idioma detectado",
-                "summary": f"Azure Language identificó el idioma principal del texto.",
-                "items": [
-                    {"label": "Idioma", "value": lang.name},
-                    {"label": "Código ISO 639-1", "value": lang.iso6391_name},
-                    {"label": "Confianza", "value": f"{lang.confidence_score:.1%}"},
-                ],
-            }
-        elif task == "key_phrases":
-            result = client.extract_key_phrases([document])[0]
-            if result.is_error:
-                return jsonify({"error": result.error.message}), 400
-            data = {"title": "Frases clave", "items": [{"label": "Frase", "value": p} for p in result.key_phrases]}
-            if not result.key_phrases:
-                data["summary"] = "No se encontraron frases clave en el texto."
-        elif task == "entities":
-            result = client.recognize_entities([document])[0]
-            if result.is_error:
-                return jsonify({"error": result.error.message}), 400
-            data = {
-                "title": "Entidades reconocidas",
-                "items": [
-                    {"label": entity.category, "value": entity.text, "detail": f"Confianza: {entity.confidence_score:.1%}"}
-                    for entity in result.entities
-                ],
-            }
-            if not result.entities:
-                data["summary"] = "No se encontraron entidades reconocibles."
-        elif task == "sentiment":
-            result = client.analyze_sentiment([document], show_opinion_mining=True)[0]
-            if result.is_error:
-                return jsonify({"error": result.error.message}), 400
-            data = {
-                "title": "Análisis de sentimiento",
-                "items": [
-                    {"label": "Sentimiento general", "value": result.sentiment.capitalize()},
-                    {"label": "Positivo", "value": f"{result.confidence_scores.positive:.1%}"},
-                    {"label": "Neutral", "value": f"{result.confidence_scores.neutral:.1%}"},
-                    {"label": "Negativo", "value": f"{result.confidence_scores.negative:.1%}"},
-                ],
-            }
-        elif task == "pii":
-            result = client.recognize_pii_entities([document], language="es")[0]
-            if result.is_error:
-                return jsonify({"error": result.error.message}), 400
-            data = {
-                "title": "Información personal detectada",
-                "items": [
-                    {"label": entity.category, "value": entity.text, "detail": f"Confianza: {entity.confidence_score:.1%}"}
-                    for entity in result.entities
-                ],
-                "redacted_text": result.redacted_text,
-            }
-            if not result.entities:
-                data["summary"] = "No se identificó información personal reconocible."
-        elif task == "summary":
-            # Usamos extracción de frases para ofrecer una versión introductoria,
-            # compatible con el recurso Azure Language usado en este laboratorio.
-            result = client.extract_key_phrases([document])[0]
-            if result.is_error:
-                return jsonify({"error": result.error.message}), 400
-            phrases = result.key_phrases
-            data = {
-                "title": "Resumen introductorio",
-                "summary": " · ".join(phrases[:5]) if phrases else "No fue posible extraer ideas principales del texto.",
-                "items": [{"label": "Idea clave", "value": phrase} for phrase in phrases],
-                "note": "Esta opción muestra frases clave como resumen didáctico; no es el servicio dedicado de resumen generativo.",
-            }
-        else:
-            return jsonify({"error": "Selecciona una tarea válida."}), 400
-
-        return jsonify(data)
+        result = client.recognize_entities(
+            documents=[{"id": "1", "text": text}],
+            language="en",
+        )[0]
+        if result.is_error:
+            return jsonify({"error": result.error.message}), 400
+        return jsonify({
+            "operation": "entities",
+            "entities": [
+                {
+                    "text": entity.text,
+                    "category": entity.category,
+                    "subcategory": entity.subcategory,
+                    "confidence": round(entity.confidence_score * 100, 2),
+                }
+                for entity in result.entities
+            ],
+        })
     except ValueError as error:
         return jsonify({"error": str(error)}), 500
     except AzureError as error:
-        message = getattr(error, "message", None) or str(error)
-        return jsonify({"error": f"Azure AI Language: {message}"}), 502
+        return jsonify({"error": f"Azure AI Language: {error.message}"}), 502
 
 
 if __name__ == "__main__":
