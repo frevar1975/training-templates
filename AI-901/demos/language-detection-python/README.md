@@ -1,7 +1,6 @@
 # Laboratorio: detección de idioma con Azure AI Language
 
-Aplicación de consola en Python que analiza comentarios ficticios de clientes
-y muestra el idioma detectado, su código ISO 639-1 y la confianza del servicio.
+Aplicación en Python que analiza comentarios de prueba y muestra el idioma detectado, el código ISO 639-1 y la confianza del servicio. Incluye demo de consola y página web local.
 
 ## Requisitos
 
@@ -12,7 +11,7 @@ y muestra el idioma detectado, su código ISO 639-1 y la confianza del servicio.
 
 ## Preparación en Visual Studio Code
 
-1. Extrae la carpeta y ábrela en Visual Studio Code.
+1. Abre la carpeta del proyecto en Visual Studio Code.
 2. Abre una terminal en la carpeta del proyecto.
 3. Crea y activa el entorno virtual:
 
@@ -20,9 +19,6 @@ y muestra el idioma detectado, su código ISO 639-1 y la confianza del servicio.
    py -m venv .venv
    .\.venv\Scripts\Activate.ps1
    ```
-
-   Si PowerShell bloquea la activación, usa `.venv\Scripts\python.exe`
-   para ejecutar Python y pip sin activar el entorno.
 
 4. Instala las dependencias:
 
@@ -38,34 +34,40 @@ y muestra el idioma detectado, su código ISO 639-1 y la confianza del servicio.
    LANGUAGE_KEY=TU_CLAVE
    ```
 
-   Usa endpoint y clave del mismo recurso. No pegues la clave en `app.py`,
+   Usa endpoint y clave del mismo recurso. No pegues la clave en el código,
    no la compartas y no subas `.env` al repositorio.
 
-7. Ejecuta:
+## Demo web local
+
+1. Con el archivo `.env` configurado, inicia la aplicación:
 
    ```powershell
-   python app.py
+   python web_app.py
    ```
 
-## Qué muestra el resultado
+2. Abre `http://127.0.0.1:5000` en el navegador.
+3. Escribe o pega un texto y pulsa **Detectar idioma**.
+
+La página permite mostrar al alumno el texto de entrada y el resultado.
+El servidor se limita a la computadora local. La clave permanece en el backend
+y no se envía al navegador.
+
+## Demo de consola
+
+También puedes ejecutar la versión de consola con los textos de ejemplo:
+
+```powershell
+python app.py
+```
+
+## Resultado
 
 - Idioma detectado
 - Código ISO 639-1
 - Confianza estimada por el servicio
 
-Los textos de prueba están en `sample_texts` dentro de `app.py`. Puedes
-editarlos o agregar comentarios ficticios para comparar resultados.
-
-## Guion breve para la demo
-
-1. El programa carga endpoint y clave desde variables de entorno.
-2. El SDK crea un cliente para Azure Language.
-3. `detect_language` envía los textos para su análisis.
-4. Azure devuelve idioma, código y puntuación de confianza.
-5. La detección es una predicción y se debe revisar en aplicaciones sensibles.
-
 ## Seguridad
 
 - `.env` está excluido mediante `.gitignore`.
-- No uses datos reales de clientes en esta práctica.
+- Usa solo textos ficticios en la práctica.
 - Si una clave se publica por accidente, rótala en Azure.
