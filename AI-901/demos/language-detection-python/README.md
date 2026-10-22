@@ -24,16 +24,16 @@ Aplicación en Python con una página web local para probar dos capacidades de A
    git --version
    ```
 
-4. Clona el repositorio de delivery y entra a la carpeta de la demo:
+4. Clona el repositorio de plantillas y entra a la carpeta de la demo:
 
    ```powershell
    New-Item -ItemType Directory -Force C:\clases
    Set-Location C:\clases
-   git clone https://github.com/frevar1975/training-delivery.git
-   Set-Location .\training-delivery\AI-901\Netxpress\demo-language-detection-python
+   git clone https://github.com/frevar1975/training-templates.git
+   Set-Location .\training-templates\AI-901\demos\language-detection-python
    ```
 
-   Para Education IT, la carpeta es `AI-901\EducationIT-octubre-2026\demo-language-detection-python`. Si el repositorio ya está clonado, entra en él y ejecuta `git pull`.
+   Si el repositorio ya está clonado, entra en él y ejecuta `git pull`.
 
 5. Crea el entorno virtual e instala dependencias:
 
