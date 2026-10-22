@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detector de idioma | Azure AI Language</title>
+  <style>
+    :root { color-scheme: light; font-family: "Segoe UI", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #f3f6fb; color: #172033; }
+    header { background: #102a56; color: white; padding: 24px max(24px, calc((100% - 900px)/2)); }
+    header span { color: #a9c7ff; font-size: 14px; font-weight: 600; }
+    main { width: min(760px, calc(100% - 32px)); margin: 42px auto; }
+    .card { background: white; border: 1px solid #e0e7f0; border-radius: 16px; padding: 30px; box-shadow: 0 12px 36px #14274a12; }
+    h1 { margin: 0 0 10px; font-size: clamp(25px, 4vw, 34px); }
+    .intro { color: #58657a; line-height: 1.55; margin: 0 0 25px; }
+    label { display: block; font-weight: 650; margin-bottom: 9px; }
+    textarea { width: 100%; min-height: 170px; resize: vertical; border: 1px solid #b9c5d6; border-radius: 10px; padding: 14px; font: inherit; line-height: 1.5; }
+    textarea:focus { outline: 3px solid #bcd6ff; border-color: #1769d2; }
+    .actions { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 9px; padding: 12px 20px; color: white; background: #1769d2; font: inherit; font-weight: 650; cursor: pointer; }
+    button:hover { background: #0d54b2; }
+    button:disabled { opacity: .65; cursor: wait; }
+    .hint { color: #69768a; font-size: 13px; }
+    #status { margin-top: 22px; }
+    .result { background: #eff8f2; border: 1px solid #b8e2c4; border-radius: 12px; padding: 18px; }
+    .result h2 { margin: 0 0 14px; font-size: 19px; color: #176334; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    .metric { background: white; border-radius: 8px; padding: 12px; }
+    .metric small { display: block; color: #647187; margin-bottom: 5px; }
+    .metric strong { font-size: 18px; }
+    .error { background: #fff1f0; color: #9f2520; border: 1px solid #f2c3bf; border-radius: 10px; padding: 14px; }
+    footer { color: #69768a; text-align: center; font-size: 13px; margin: 18px 0 36px; }
+  </style>
+</head>
+<body>
+  <header><span>DEMO · AZURE AI LANGUAGE</span></header>
+  <main>
+    <section class="card">
+      <h1>Detector de idioma</h1>
+      <p class="intro">Escribe o pega un texto y Azure AI Language identificará el idioma, su código ISO y la confianza de la detección.</p>
+      <form id="form">
+        <label for="text">Texto para analizar</label>
+        <textarea id="text" maxlength="5000" placeholder="Ejemplo: La atención fue rápida y el técnico explicó cómo configurar el router." required></textarea>
+        <div class="actions">
+          <button id="submit" type="submit">Detectar idioma</button>
+          <span class="hint">Hasta 5.000 caracteres · texto de demostración</span>
+        </div>
+      </form>
+      <div id="status" aria-live="polite"></div>
+    </section>
+    <footer>El texto se envía a Azure AI Language para su análisis.</footer>
+  </main>
+  <script>
+    const form = document.querySelector("#form");
+    const input = document.querySelector("#text");
+    const button = document.querySelector("#submit");
+    const statusBox = document.querySelector("#status");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      button.textContent = "Analizando…";
+      statusBox.replaceChildren();
+      try {
+        const response = await fetch("/detect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: input.value })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "No se pudo analizar el texto.");
+        const panel = document.createElement("section");
+        panel.className = "result";
+        const title = document.createElement("h2");
+        title.textContent = "Resultado de la detección";
+        const metrics = document.createElement("div");
+        metrics.className = "metrics";
+        [["Idioma", data.language], ["Código ISO 639-1", data.iso], ["Confianza", String(data.confidence) + "%"]]
+          .forEach(([label, value]) => {
+            const item = document.createElement("div");
+            item.className = "metric";
+            const small = document.createElement("small");
+            small.textContent = label;
+            const strong = document.createElement("strong");
+            strong.textContent = value || "No disponible";
+            item.append(small, strong);
+            metrics.append(item);
+          });
+        panel.append(title, metrics);
+        statusBox.append(panel);
+      } catch (error) {
+        const message = document.createElement("div");
+        message.className = "error";
+        message.textContent = error.message;
+        statusBox.append(message);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Detectar idioma";
+      }
+    });
+  </script>
+</body>
+</html>
