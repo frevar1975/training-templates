@@ -32,6 +32,7 @@ Presentar conceptos fundamentales de inteligencia artificial y los servicios de 
 - [Mapa temático y sugerencia de agrupación](module-map.md)
 - [Plantilla reutilizable de sesión](session-template.md)
 - [Demo: cargar audio y transcribir con Azure Speech](demos/speech-audio-upload/README.md)
+- [Demo: agente de voz con Azure Speech MCP](demos/speech-mcp-agent/README.md)
 
 ## Enfoque de enseñanza
 
