@@ -46,6 +46,76 @@ Para crear el audio, sigue las instrucciones del demo anterior. Ese generador us
 
 6. Genera la SAS del contenedor con el menor tiempo de expiración práctico y completa la conexión. La herramienta necesita el contenedor para guardar el audio generado por texto a voz.
 
+## Guion para mostrar cómo agregar MCP desde cero
+
+Este guion empieza con un agente nuevo y muestra la conexión de **Azure Speech MCP Server** en Microsoft Foundry. No borres el agente de prueba que ya funciona: crea otro para la demostración. La cuenta de Storage, el contenedor y el recurso Foundry pueden prepararse antes de la clase.
+
+### Antes de compartir la pantalla
+
+Ten listo:
+
+- Un recurso de Microsoft Foundry en una región y nivel que admitan herramientas MCP.
+- Un modelo con llamadas a herramientas, por ejemplo GPT-4o.
+- Una cuenta de Azure Storage con un contenedor privado y un WAV de prueba ya cargado.
+- En Azure Portal, las credenciales del recurso Foundry (**KEY1** o **KEY2**) y una SAS del contenedor con permisos de lectura y escritura para configurar la conexión.
+- Una SAS de solo lectura, vigente y de corta duración, para el archivo WAV. Esta es distinta de la SAS del contenedor.
+
+No muestres ni guardes las claves o URL SAS en las diapositivas, capturas ni repositorio.
+
+### Crear el agente y agregar el servidor MCP
+
+1. Abre Microsoft Foundry y selecciona **Build > Agents > Create agent**.
+2. Asigna un nombre, por ejemplo `Demo-Speech-MCP-Desde-Cero`, elige GPT-4o (o un modelo compatible con tool calling) y crea el agente.
+3. En **Playground > Tools**, selecciona **Add > Add a new tool**.
+4. Abre la pestaña **Catalog**, busca **Azure Speech MCP Server**, selecciónalo y pulsa **Create**.
+5. En el formulario de conexión:
+   - **Name:** conserva `AzureSpeechMCPServer` o escribe un nombre reconocible.
+   - **Remote MCP Server endpoint:** verifica el endpoint que propone Foundry.
+   - **foundry-resource-name:** escribe el nombre del recurso de Microsoft Foundry; no uses el nombre del proyecto ni el de Storage.
+   - **Bearer (API Key):** pega KEY1 o KEY2 obtenida desde **Azure Portal > recurso Foundry > Keys and Endpoint**.
+   - **X-Blob-Container-Url:** pega la SAS del contenedor con lectura y escritura para guardar el audio que genere la síntesis de voz.
+6. Pulsa **Connect**. Cuando aparezca el cuadro **Configure**, deja **Allowed AzureSpeechMCPServer tools** vacío para permitir las herramientas del servidor.
+7. Para que la demostración pida confirmación antes de cada llamada, conserva **Never auto-approve tools** y pulsa **Apply**.
+8. Comprueba que **Azure Speech MCP Server** aparezca en la lista **Tools** del agente.
+
+### Probar la transcripción del audio
+
+El Playground no aceptó el WAV adjunto directamente para la llamada MCP. El argumento `audioUrl` debe recibir la URL SAS completa del WAV:
+
+1. En Azure Portal, abre el blob WAV y selecciona **Generate SAS**.
+2. Selecciona permiso **Read**, establece un vencimiento corto y genera la URL.
+3. Copia el campo **Blob SAS URL** completo. La URL del archivo debe abrir o descargar el WAV en el navegador. No uses solo el nombre del archivo ni la URL del contenedor.
+4. En el chat del Playground, envía:
+
+```text
+Transcribe el audio ubicado en <URL_SAS_COMPLETA_DEL_WAV>.
+Usa español de Bolivia (es-BO), devuelve la transcripción literal,
+clasifica el motivo, extrae los datos mencionados e indica los datos faltantes.
+No inventes información.
+```
+
+5. Si aparece una solicitud de aprobación, revisa que corresponda a `speech_to_text` y apruébala.
+6. En **Traces**, confirma que `audioUrl` contiene la URL completa del archivo y revisa el resultado.
+
+La prueba validada transcribió audio en español y clasificó la consulta como `CONFIRMAR_CITA`; extrajo los datos mencionados e indicó que la fecha exacta faltaba porque el audio decía “mañana”.
+
+**Seguridad para la prueba:** la URL SAS es una credencial. Si la pegas en el mensaje del Playground, usa únicamente una SAS temporal del audio de demostración, no sensible; no compartas una captura donde se vea y limpia el historial de prueba al terminar.
+
+### Extensión opcional: generar voz
+
+La conexión tiene la SAS del contenedor para guardar resultados de texto a voz. En el chat, solicita que lea la respuesta en español y comprueba el enlace al WAV generado. Esta parte queda pendiente de validación práctica; verifica el resultado durante la demostración antes de presentarla como probada.
+
+### Solución rápida de problemas
+
+| Síntoma | Qué revisar |
+|---|---|
+| No se puede adjuntar el WAV en el Playground | Usa la Blob SAS URL del archivo en el pedido al agente. |
+| Speech MCP no descarga el audio | Genera una SAS desde el blob WAV con permiso **Read** y vencimiento futuro; confirma que la URL completa descarga el archivo en el navegador. |
+| Aparece un XML de Storage al abrir la URL | Vuelve al blob y copia el campo **Blob SAS URL**; no copies la dirección del portal o del contenedor. |
+| El agente envía solo el nombre del WAV | Repite el pedido indicando la URL SAS completa del archivo. |
+| Falla la conexión MCP | Revisa el nombre del recurso Foundry, KEY1/KEY2 y la SAS de contenedor con lectura y escritura. |
+| No aparece una solicitud de aprobación | Revisa **Configure > Approval setting** y selecciona **Never auto-approve tools** para requerir aprobación manual. |
+
 ## Instrucciones del agente
 
 Puedes usar estas instrucciones como base:
