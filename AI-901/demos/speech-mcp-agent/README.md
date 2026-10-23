@@ -92,6 +92,50 @@ Lee en voz alta la respuesta sugerida en español usando Azure Speech MCP.
 
 Speech MCP guarda el WAV generado en el contenedor y el Playground muestra un enlace para escucharlo.
 
+## Resultado de la prueba guiada
+
+La prueba se completó en Microsoft Foundry con un audio de español boliviano. Azure Speech MCP transcribió el audio y el agente clasificó el motivo como `CONFIRMAR_CITA`, extrajo hora, clínica, requisitos y contacto, y señaló correctamente que no podía deducir una fecha exacta a partir de la palabra “mañana”.
+
+### Cómo proporcionar el audio al MCP
+
+El Playground no aceptó el WAV como archivo adjunto para esta llamada. La herramienta `speech_to_text` necesita que `audioUrl` sea una URL accesible al archivo:
+
+1. Sube el WAV a un contenedor privado de Azure Blob Storage.
+2. En el blob del audio, selecciona **Generate SAS** y crea una URL SAS con permiso **Read** y vencimiento corto.
+3. Copia la **Blob SAS URL** completa del archivo. No uses solo el nombre del WAV, el token SAS suelto, la URL del contenedor ni la dirección de la página del portal.
+4. Comprueba la URL en una ventana del navegador. Debe descargar o reproducir el WAV; si aparece un XML de error, vuelve al blob y copia la **Blob SAS URL** generada para ese archivo.
+5. En el Playground, incluye esa URL en el pedido:
+
+```text
+Transcribe el audio ubicado en <URL_SAS_COMPLETA_DEL_WAV>.
+Usa español de Bolivia (es-BO), devuelve la transcripción literal,
+clasifica el motivo, extrae los datos mencionados e indica los datos faltantes.
+No inventes información.
+```
+
+En **Traces**, confirma que la llamada a `speech_to_text` contiene la URL completa en `audioUrl`. Si Foundry pide aprobación, revisa la llamada y apruébala. Para pedir aprobación manual en la configuración de la herramienta, selecciona **Never auto-approve tools**.
+
+### Resultado esperado
+
+Para el audio de confirmación de cita, el agente debe:
+
+- devolver la transcripción en español;
+- clasificar el motivo como `CONFIRMAR_CITA`;
+- extraer los datos expresados en el audio;
+- marcar la fecha exacta como faltante cuando el audio solo dice “mañana”;
+- redactar una respuesta sugerida sin agregar datos no mencionados.
+
+La prueba de transcripción y análisis quedó validada. La generación de una respuesta hablada es un paso opcional posterior: se solicita en el chat y el archivo de salida se guarda en el contenedor configurado. Valídala por separado antes de presentar la síntesis de voz como probada.
+
+### Solución del error de descarga
+
+Si Speech MCP informa que no puede descargar el audio, verifica que:
+
+- `audioUrl` sea la **Blob SAS URL completa del WAV**, no solo el nombre;
+- la SAS corresponda al blob correcto, esté vigente y tenga permiso **Read**;
+- al abrirla en el navegador se descargue el audio;
+- no se haya copiado una URL del portal o del contenedor por error.
+
 ## Seguridad y limpieza
 
 - Usa solo audios de prueba, sin datos personales o información de clientes.
