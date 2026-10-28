@@ -314,10 +314,12 @@ Si solo hay una muestra, espera a que lleguen más antes de presentar una tenden
 ## Solución de problemas aprendida durante el ensayo
 
 - **El grupo aparece como no encontrado:** confirma la suscripción activa en la misma consola donde ejecutas el comando. PowerShell, Cloud Shell y otras ventanas pueden tener contextos distintos. Usa `az account show`, selecciona el ID completo con `az account set` y comprueba `az group list`.
+- **La respuesta de `az vm run-command invoke` parece vacía en PowerShell:** asígnala a una variable y luego muestra la variable (por ejemplo, `$resultado = az vm run-command invoke ...; $resultado`) para inspeccionar el JSON devuelto.
 - **La VM funciona, pero no aparece Heartbeat:** valida extensión AMA, identidad administrada, asociación, workspace y región; espera unos minutos.
 - **Hay Heartbeat, pero `InsightsMetrics` está vacío:** revisa la DCR y la asociación; confirma que el flujo sea `Microsoft-InsightsMetrics`, que el destino sea el workspace correcto y que el contador esté escrito como `\\VmInsights\\DetailedMetrics` en el JSON.
 - **La DCR falla con un error de tipo vacío frente a `Linux`:** vuelve a crearla pasando `--kind Linux`. El tipo no se puede cambiar después de crear la regla.
 - **Se actualizó la DCR, pero el agente sigue usando la regla anterior:** permite varios minutos para la resincronización. En el ensayo, reiniciar AMA no fue suficiente; al recrear únicamente la asociación de la DCR, la configuración se volvió a propagar y después llegaron las filas. Para recrear una asociación, elimina solo la asociación de esta DCR y vuelve a crearla; luego espera y consulta KQL otra vez.
+- **Una consulta JMESPath devuelve `null` para `properties.dataSources`:** `az monitor data-collection rule show` presenta esas propiedades en el nivel superior. Consulta `dataSources.performanceCounters[0].counterSpecifiers`, sin el prefijo `properties.`.
 - **La vista nueva de Monitor está vacía, pero KQL tiene filas:** este demo valida la experiencia clásica. Las métricas OpenTelemetry se envían a un Azure Monitor workspace distinto y se consultan con PromQL. No uses una vista OpenTelemetry vacía para concluir que `InsightsMetrics` no está funcionando, ni mezcles ambos destinos en esta práctica.
 - **PowerShell muestra `>>` mientras pegas un bloque:** pega únicamente el código, sin copiar el prompt `PS C:\>` ni los prefijos `>>`.
 
