@@ -34,9 +34,22 @@ Opciones:
 # Agrega Wireshark/Nmap y clona repo público de plantillas
 pwsh -NoProfile -ExecutionPolicy Bypass -File .\setup-mct.ps1 -IncludeSecurityTools -ClonePublicRepo
 
-# Agrega además los módulos PowerShell Az y Microsoft.Graph
+# Descarga módulos Az y Microsoft.Graph en C:\PowerShell\Modules (no en OneDrive)
 pwsh -NoProfile -ExecutionPolicy Bypass -File .\setup-mct.ps1 -InstallAzModules
 ```
+
+El instalador configura siempre `C:\PowerShell\Modules` como primera ruta de módulos y actualiza el perfil de PowerShell 7 para excluir rutas OneDrive sin borrar archivos. La opción `-InstallAzModules` descarga `Az` y `Microsoft.Graph` mediante `Save-Module` únicamente si no están ya disponibles localmente. También admite `-ModulesPath 'D:\PowerShell\Modules'` para cambiar la ruta (usar una ruta local fuera de OneDrive). El script no cambia la política de ejecución de Windows PowerShell 5.1 ni elimina carpetas sincronizadas.
+
+**Verificación tras abrir una nueva ventana de PowerShell 7:**
+
+```powershell
+$env:PSModulePath -split ';'
+Import-Module Az.Accounts -ErrorAction Stop
+Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
+Get-Module Az.Accounts, Microsoft.Graph.Authentication | Select-Object Name,Version,Path
+```
+
+Los dos módulos deberían cargar desde `C:\PowerShell\Modules`. Si usas Windows PowerShell 5.1 y la política bloquea los scripts, revisa `Get-ExecutionPolicy -List`; `RemoteSigned` a nivel `CurrentUser` es una opción cuando tu organización lo permite. Evita cambiar políticas corporativas.
 
 El script es reutilizable: WinGet puede detectar programas ya instalados. Guarda registro en `~/MCT-Setup-Logs`. Algunos paquetes o extensiones pueden cambiar de identificador; si alguno falla, usa `winget search nombre` o `code --list-extensions`.
 
