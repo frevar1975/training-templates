@@ -4,6 +4,7 @@
   Prepara una notebook Windows 11 para dictar cursos Microsoft (MCT).
 .DESCRIPTION
   Instala herramientas con WinGet, extensiones VS Code, y crea C:\clases.
+  Configura módulos locales en C:\PowerShell\Modules sin depender de OneDrive.
   No inicia sesión, no despliega recursos Azure ni clona repositorios privados automáticamente.
 .EXAMPLE
   pwsh -NoProfile -ExecutionPolicy Bypass -File .\setup-mct.ps1
@@ -15,6 +16,7 @@ param(
     [switch]$IncludeSecurityTools,
     [switch]$ClonePublicRepo,
     [switch]$InstallAzModules,
+    [string]$ModulesPath = 'C:\PowerShell\Modules',
     [string]$ClassesPath = 'C:\clases'
 )
 
@@ -103,13 +105,87 @@ try {
         Write-Warning 'No se encontró code en PATH. Abre una terminal nueva y ejecuta los comandos de extensiones del README.'
     }
 
+    # MCT: priorizar módulos locales y evitar rutas OneDrive (sin borrar archivos).
+    New-Item -Path $ModulesPath -ItemType Directory -Force | Out-Null
+    $configuredModulePath = @(
+        $ModulesPath
+        @($env:PSModulePath -split ';' | Where-Object {
+            $_ -and $_ -ne $ModulesPath -and $_ -notlike '*OneDrive*'
+        })
+    ) | Select-Object -Unique
+    $env:PSModulePath = $configuredModulePath -join ';'
+
+    # Registrar ruta de usuario; PowerShell puede agregar rutas predeterminadas al iniciar.
+    [Environment]::SetEnvironmentVariable('PSModulePath', $ModulesPath, 'User')
+
+    # Bloque delimitado e idempotente en el perfil PowerShell 7 para corregir rutas al inicio.
+    $profilePath = $PROFILE.CurrentUserAllHosts
+    $profileFolder = Split-Path -Parent $profilePath
+    New-Item -Path $profileFolder -ItemType Directory -Force | Out-Null
+    $profileText = if (Test-Path -LiteralPath $profilePath) {
+        Get-Content -LiteralPath $profilePath -Raw
+    } else { '' }
+    $startMarker = '# >>> MCT LOCAL MODULES >>>'
+    $endMarker = '# <<< MCT LOCAL MODULES <<<'
+    # Generar el bloque sin interpolar variables de PowerShell en tiempo de instalación.
+    $profileBlock = @'
+# >>> MCT LOCAL MODULES >>>
+$mctModuleRoot = '__MCT_MODULE_PATH__'
+$mctModulePaths = @(
+    $mctModuleRoot
+    @($env:PSModulePath -split ';' | Where-Object {
+        $_ -and $_ -ne $mctModuleRoot -and $_ -notlike '*OneDrive*'
+    })
+) | Select-Object -Unique
+$env:PSModulePath = $mctModulePaths -join ';'
+# <<< MCT LOCAL MODULES <<<
+'@.Replace('__MCT_MODULE_PATH__', $ModulesPath.Replace("'", "''"))
+
+    if ($profileText.Contains($startMarker) -and $profileText.Contains($endMarker)) {
+        $pattern = '(?s)' + [regex]::Escape($startMarker) + '.*?' + [regex]::Escape($endMarker)
+        $profileText = [regex]::Replace($profileText, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $profileBlock })
+    }
+    elseif ($profileText -match '# MCT - MODULOS POWERSHELL LOCALES') {
+        # Actualizar bloque legado creado manualmente durante la migración.
+        $pattern = '(?s)# =+\r?\n# MCT - MODULOS POWERSHELL LOCALES\r?\n# =+.*?\$env:PSModulePath\s*=\s*\$rutas\s*-join\s*["'']?;["'']?'
+        $profileText = [regex]::Replace($profileText, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $profileBlock })
+        if (-not $profileText.Contains($startMarker)) { $profileText += "`r`n" + $profileBlock }
+    }
+    else { $profileText += "`r`n" + $profileBlock }
+    Set-Content -LiteralPath $profilePath -Value $profileText -Encoding utf8
+    Write-Host "Módulos locales: $ModulesPath; perfil: $profilePath" -ForegroundColor Green
+
     if ($InstallAzModules) {
-        Write-Host 'Instalando módulos Az y Microsoft.Graph para el usuario actual...' -ForegroundColor Cyan
+        Write-Host "Verificando módulos en $ModulesPath..." -ForegroundColor Cyan
         foreach ($module in @('Az', 'Microsoft.Graph')) {
-            try {
-                Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -Force -AllowClobber -ErrorAction Stop
+            $localModule = Get-Module -ListAvailable -Name $module |
+                Where-Object { $_.Path.StartsWith($ModulesPath + '\', [System.StringComparison]::OrdinalIgnoreCase) } |
+                Sort-Object Version -Descending | Select-Object -First 1
+            if ($localModule) {
+                Write-Host "$module ya disponible en C: ($($localModule.Version)); se omite descarga." -ForegroundColor Green
+                continue
             }
-            catch { Write-Warning "No se pudo instalar módulo $module : $($_.Exception.Message)" }
+            try {
+                Save-Module -Name $module -Path $ModulesPath -Repository PSGallery -ErrorAction Stop
+                Write-Host "$module descargado en $ModulesPath" -ForegroundColor Green
+            }
+            catch {
+                Write-Warning "No se pudo guardar módulo $module : $($_.Exception.Message)"
+                $failed.Add("PowerShell:$module")
+            }
+        }
+        foreach ($module in @('Az.Accounts','Microsoft.Graph.Authentication')) {
+            try {
+                Import-Module $module -ErrorAction Stop
+                $loaded = Get-Module -Name $module
+                if (-not $loaded.Path.StartsWith($ModulesPath + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+                    Write-Warning "$module se cargó fuera de $ModulesPath : $($loaded.Path)"
+                } else { Write-Host "$module OK: $($loaded.Path)" -ForegroundColor Green }
+            }
+            catch {
+                Write-Warning "Falló la validación de $module : $($_.Exception.Message)"
+                $failed.Add("Import:$module")
+            }
         }
     }
 
