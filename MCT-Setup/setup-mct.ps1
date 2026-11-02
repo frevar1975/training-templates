@@ -139,7 +139,8 @@ $mctModulePaths = @(
 ) | Select-Object -Unique
 $env:PSModulePath = $mctModulePaths -join ';'
 # <<< MCT LOCAL MODULES <<<
-'@.Replace('__MCT_MODULE_PATH__', $ModulesPath.Replace("'", "''"))
+'@
+    $profileBlock = $profileBlock.Replace('__MCT_MODULE_PATH__', $ModulesPath.Replace("'", "''"))
 
     if ($profileText.Contains($startMarker) -and $profileText.Contains($endMarker)) {
         $pattern = '(?s)' + [regex]::Escape($startMarker) + '.*?' + [regex]::Escape($endMarker)
