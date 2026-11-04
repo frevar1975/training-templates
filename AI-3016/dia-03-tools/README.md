@@ -18,7 +18,16 @@ El menú permite seleccionar:
 4. **Function calling** — el modelo solicita una función local; la aplicación la ejecuta y devuelve el resultado.
 0. Salir.
 
-Después de elegir, escribe la consulta en el momento. Para File Search, pregunta por el contenido del documento. Para Function calling, pide consultar disponibilidad de una visita guiada e incluye fecha, hora y cantidad de personas. Esa función solo devuelve datos simulados: no crea una reserva.
+Después de elegir, escribe una consulta en la terminal y presiona **Enter**. Puedes usar estos prompts de prueba (copia solo el texto dentro del bloque):
+
+| Opción | Prompt listo para pegar | Qué observar |
+|---|---|---|
+| **1. Code Interpreter** | `Calcula el total y el promedio mensual de estas ventas: enero 120000, febrero 155000 y marzo 141000 pesos argentinos. Explica brevemente el resultado y muestra las operaciones.` | El modelo puede pedir la herramienta para hacer el cálculo; revisa la respuesta y el indicador de invocación. |
+| **2. Web Search** | `Busca tres actividades turísticas para hacer este fin de semana en Buenos Aires. Resume cada una e incluye las fuentes y fechas.` | La respuesta debe incluir fuentes web; abre una y comprueba que respalde el dato. |
+| **3. File Search** | `Según la política de viajes del documento, ¿con cuánta anticipación debo solicitar un cambio de reserva y cuál es el límite diario para comida? Indica también qué comprobante se necesita para el reembolso.` | Contrasta la respuesta con `demo-data/politica_viajes_demo.txt`. Luego prueba: `¿La política permite reembolsar excursiones? Si el documento no lo dice, indícalo.` |
+| **4. Function calling** | `Consulta si hay disponibilidad para una visita guiada en Buenos Aires el 2026-11-14 a las 10:00 para 2 personas. No hagas una reserva.` | Observa los argumentos que el modelo entrega, la respuesta de la función local y la respuesta final. La disponibilidad es ficticia; no se reserva nada. |
+
+**Cómo probar cada opción:** ejecuta `python demo_interactivo.py`, escribe el número de opción en `Opción:`, pega el prompt correspondiente cuando aparezca `Escribe tu consulta` y presiona **Enter**. Al terminar, el menú vuelve a aparecer. Presiona `0` para salir.
 
 En VS Code, también puedes elegir **Día 3 · Menú interactivo** en Run and Debug y presionar **F5**.
 
