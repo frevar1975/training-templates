@@ -1,0 +1,48 @@
+CHAT FICTICIO DE WHATSAPP — ZAPATERÍA PASO FIRME
+Periodo: 1 al 31 de octubre de 2026
+Nota: conversación simulada para práctica. Pedidos y personas ficticios.
+
+01/10/2026 — 09:05 — Valeria (Ventas): Equipo, empezamos octubre. Por favor registren pedidos confirmados, tallas agotadas, cambios y entregas pendientes para el resumen de fin de mes.
+01/10/2026 — 09:12 — Diego (Ventas): Recibí consulta por zapatilla urbana blanca, modelo Urbano 24. Hay tallas 37, 38 y 40; talla 39 agotada.
+01/10/2026 — 09:20 — Valeria: Anoten la falta de talla 39. Consultaré reposición con proveedor.
+02/10/2026 — 11:14 — Camila (Atención): Pedido PF-1001 confirmado: botín café, modelo Montaña, talla 38. Entrega solicitada para el 5 de octubre.
+02/10/2026 — 11:22 — Diego: Registrado. El cliente pidió entrega por la tarde; falta confirmar horario con reparto.
+03/10/2026 — 14:40 — Valeria: Proveedor confirma reposición de Urbano 24 talla 39 para la semana del 12 de octubre, sin día exacto.
+04/10/2026 — 10:10 — Camila: Pedido PF-1002: sandalia negra, modelo Brisa, talla 36. Pago confirmado. Retiro en tienda.
+05/10/2026 — 16:05 — Diego: PF-1001 entregado. Cliente confirmó recepción del botín Montaña talla 38.
+06/10/2026 — 09:30 — Valeria: Promoción de fin de semana: 10% en modelos seleccionados. No aplicar a pedidos ya confirmados.
+07/10/2026 — 13:45 — Camila: Consulta por mocasín beige, modelo Clásico, talla 39. Hay stock; cliente pidió reservar hasta mañana.
+07/10/2026 — 13:52 — Valeria: Reservado hasta el 8/10 a las 18:00. Si no confirma, liberar stock.
+08/10/2026 — 17:20 — Camila: La clienta confirmó el mocasín. Pedido PF-1003, talla 39, pago por transferencia pendiente de verificación.
+08/10/2026 — 17:30 — Diego: No despachar hasta verificar el pago.
+09/10/2026 — 09:15 — Valeria: Transferencia de PF-1003 verificada. Preparar para entrega.
+10/10/2026 — 12:00 — Diego: PF-1003 entregado. Sin novedades.
+11/10/2026 — 15:25 — Camila: Pedido PF-1004: zapatilla deportiva azul, modelo Sprint, talla 41. El cliente solicita cambio por talla 42 porque le queda ajustada.
+11/10/2026 — 15:34 — Valeria: Aceptar cambio si el producto está sin uso y conserva empaque. Revisar stock de talla 42.
+12/10/2026 — 10:05 — Diego: Hay talla 42. Producto recibido sin uso; cambio autorizado.
+13/10/2026 — 16:10 — Camila: Cambio PF-1004 completado: entregada Sprint azul talla 42; talla 41 volvió al inventario.
+14/10/2026 — 09:00 — Valeria: Llegó reposición parcial de Urbano 24: solo tallas 38 y 40. La talla 39 sigue pendiente.
+14/10/2026 — 09:18 — Diego: Actualicé stock. Hay dos consultas abiertas por talla 39.
+15/10/2026 — 11:42 — Camila: Cliente de la primera consulta acepta esperar hasta el 20/10, pero pide aviso cuando llegue.
+16/10/2026 — 14:05 — Diego: Pedido PF-1005 confirmado: Urbano 24 blanco talla 38. Entrega a domicilio el 18/10.
+17/10/2026 — 08:50 — Valeria: Reparto informa que el sábado solo hará entregas hasta las 13:00. Confirmar horario con PF-1005.
+17/10/2026 — 09:15 — Camila: Cliente de PF-1005 confirma recepción antes de las 13:00.
+18/10/2026 — 12:40 — Diego: PF-1005 entregado. Cliente conforme.
+19/10/2026 — 10:30 — Camila: Pedido PF-1006: bota corta negra, modelo Noche, talla 37. Cliente pagó; pide retiro el 21/10.
+20/10/2026 — 09:10 — Valeria: Sigue sin llegar Urbano 24 talla 39. Proveedor ahora estima entrega para el 23/10; no es fecha garantizada.
+20/10/2026 — 09:25 — Diego: Avisé a la persona interesada que la fecha es estimada y puede elegir esperar o cancelar. Eligió esperar.
+21/10/2026 — 16:00 — Camila: PF-1006 retirado en tienda. Todo correcto.
+22/10/2026 — 12:15 — Diego: Consulta nueva por sandalia Brisa negra talla 36. Hay una unidad en stock.
+22/10/2026 — 12:30 — Camila: Pedido PF-1007 confirmado y pagado; retiro en tienda acordado para el 24/10.
+23/10/2026 — 17:45 — Valeria: Llegaron tres pares Urbano 24 talla 39. Actualizar inventario y avisar a clientes en espera.
+23/10/2026 — 18:10 — Diego: Contacté a las dos personas que consultaron. Una confirmó compra para recoger mañana; la otra no respondió todavía.
+24/10/2026 — 11:20 — Camila: PF-1007 retirado. Pedido de Urbano 24 talla 39 convertido en PF-1008, pago confirmado y retiro completado.
+25/10/2026 — 09:35 — Diego: La segunda persona interesada en talla 39 respondió que ya compró en otro lugar. No reservar el par.
+26/10/2026 — 13:05 — Valeria: Quedan dos pares Urbano 24 talla 39. Mantener stock disponible; no hay pedidos pendientes de ese modelo.
+27/10/2026 — 10:50 — Camila: Pedido PF-1009: mocasín Clásico beige talla 40. Pago verificado. Envío solicitado para el 29/10.
+28/10/2026 — 15:15 — Diego: Reparto confirma entrega de PF-1009 el 29/10 entre 14:00 y 17:00.
+29/10/2026 — 16:40 — Camila: PF-1009 entregado. Cliente confirmó recepción.
+30/10/2026 — 09:00 — Valeria: Cierre preliminar: pedidos PF-1001 a PF-1009 registrados; hubo un cambio de talla completado. Revisen que no contemos el cambio como pedido adicional.
+30/10/2026 — 09:20 — Diego: Conté nueve pedidos confirmados, incluyendo PF-1008; el cambio PF-1004 está registrado como cambio, no como venta adicional.
+30/10/2026 — 09:28 — Camila: Confirmo. PF-1007 y PF-1008 fueron retirados; entregas y retiros conocidos están cerrados.
+31/10/2026 — 12:00 — Valeria: Cierre del mes: queda pendiente recibir el pago? No, todos los pedidos listados figuran pagados. Quedan dos pares Urbano 24 talla 39 en stock. Preparar informe con pedidos, cambios, consultas convertidas y pendientes de seguimiento.

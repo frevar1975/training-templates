@@ -1,0 +1,24 @@
+DEMO FICTICIO — CORREO DE ACTUALIZACIÓN SEMANAL
+Asunto: [DEMO][ESTADO] Proyecto Atlas — actualización semanal
+De: Camden (equipo del proyecto)
+Para: Freddy (responsable del informe)
+Fecha: 4 de noviembre de 2026
+
+Hola,
+
+Comparto el estado semanal del Proyecto Atlas para preparar la próxima revisión.
+
+La integración de notificaciones ya está conectada al entorno de pruebas. Priya continúa validando los casos de reintento; la fecha objetivo registrada es el 6 de noviembre de 2026.
+
+Luis sigue trabajando en la configuración del flujo de aprobación. La prueba con un usuario cliente permanece pendiente y tiene como fecha objetivo registrada el 9 de noviembre de 2026. Para ejecutar esa prueba, Marina López necesita acceso al entorno de pruebas. La solicitud está con soporte, que todavía no ha comunicado una fecha para habilitarlo.
+
+El rastreador indica 70% de avance. Luis comentó que, en su opinión, el proyecto podría estar cerca del 80%, pero el rastreador no se actualizó y Camden pidió conservar el 70% como referencia oficial hasta revisar las tareas duplicadas. Camden tiene esa revisión prevista para el 5 de noviembre.
+
+La planificación interna registra una revisión con el cliente para el 13 de noviembre de 2026. Esa fecha aún debe confirmarse con el cliente. En su mensaje, el cliente pidió ver el flujo funcionando en el entorno de pruebas para la próxima revisión, pero no indicó una fecha calendario.
+
+Próximos pasos: cerrar la revisión de duplicados, completar las pruebas de reintento, terminar el flujo de aprobación, resolver el acceso de Marina y confirmar la fecha de revisión con el cliente.
+
+Saludos,
+Camden
+
+Uso: material de práctica. Los nombres, proyecto, fechas y datos son ficticios.

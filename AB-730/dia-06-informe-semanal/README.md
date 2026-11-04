@@ -56,3 +56,5 @@ Camden debe preparar el informe semanal del proyecto Atlas a partir de un correo
 
 Consulta `delivery/` para la guía del instructor y los prompts utilizados.
 
+
+\n\## Agente reutilizable\n\nLa práctica para configurar un agente Standard de Copilot Studio con los tres demos está en [`dia-06-agente-copilot-studio/`](../dia-06-agente-copilot-studio/README.md).\n

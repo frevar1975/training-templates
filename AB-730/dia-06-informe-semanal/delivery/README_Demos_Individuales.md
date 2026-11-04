@@ -44,7 +44,7 @@ La tasa se define como tareas completadas divididas por tareas planificadas para
 | 2 | Conversación mensual de pedidos | Clasificar pedidos, cambios y consultas; reconocer límites de los datos | Informe mensual de Zapatería Paso Firme |
 | 3 | Rastreador de tareas | Calcular y visualizar tasas semanales, detectar caída y revisar filas de respaldo | Sección de métricas del Proyecto Nébula |
 
-Ninguno requiere Copilot Studio. Copilot Studio se usaría para crear un agente reutilizable que aplique instrucciones de manera repetible.
+Los tres demos individuales pueden ejecutarse sin Copilot Studio. Para configurar un agente Standard reutilizable que enrute entre los tres escenarios, consulta la [guía del agente de Copilot Studio](../../dia-06-agente-copilot-studio/README.md).
 
 ## Agenda intensiva sugerida para 150 minutos
 
