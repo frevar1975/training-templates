@@ -31,6 +31,23 @@ Después de elegir, escribe una consulta en la terminal y presiona **Enter**. Pu
 
 En VS Code, también puedes elegir **Día 3 · Menú interactivo** en Run and Debug y presionar **F5**.
 
+## Versión web local (demo adicional)
+
+La versión web se ejecuta aparte; conserva el menú por comandos y los scripts anteriores. Muestra la misma selección de herramientas en una página del navegador y mantiene la conexión y credenciales en el servidor local.
+
+1. Instala las dependencias si aún no lo hiciste: `pip install -r requirements.txt`.
+2. Configura `.env` como en la sección anterior y, para Microsoft Entra ID, ejecuta `az login` en la terminal.
+3. Desde la carpeta `dia-03-tools`, inicia la web:
+
+   ```powershell
+   python .\\web-demo\\app.py
+   ```
+
+4. Abre `http://127.0.0.1:5000` en el navegador. Elige una herramienta, pulsa **Cargar prompt de ejemplo** o escribe uno, y selecciona **Enviar consulta**.
+5. Detén el servidor con `Ctrl+C` en la terminal.
+
+La web escucha solo en el equipo local. No publiques el servidor ni agregues secretos al HTML. Function calling devuelve disponibilidad ficticia y no hace reservas. File Search crea un vector store para la sesión; al terminar, elimínalo desde Foundry si quieres limpiar el recurso.
+
 ## Preparación en VS Code (Windows / PowerShell)
 
 1. Instala Python 3.10 o superior y la extensión **Python** de Microsoft para VS Code.
