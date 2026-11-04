@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI-3016 · Herramientas de IA</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--panel:#141c31;--line:#293550;--muted:#a8b3ca;--accent:#8b9cff;--green:#91e0c1}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0,#19264a,var(--bg) 55%);color:#f3f5fb;font:16px/1.55 "Segoe UI",sans-serif;min-height:100vh}
+    main{max-width:1050px;margin:auto;padding:44px 22px 70px}.eyebrow{color:var(--green);font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.08;margin:.55rem 0}.intro{color:var(--muted);max-width:720px}
+    .layout{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:30px}.panel{background:#121a2deb;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 18px 45px #0003}
+    label,.label{display:block;font-size:.9rem;font-weight:650;margin-bottom:9px}.tools{display:grid;gap:9px}.tool{width:100%;text-align:left;background:#19233b;color:#e9edfa;border:1px solid #33415f;padding:12px 13px;border-radius:12px;cursor:pointer;font:inherit}.tool.active{border-color:var(--accent);box-shadow:0 0 0 2px #8b9cff22;background:#232e4b}.tool small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+    textarea{width:100%;min-height:170px;resize:vertical;background:#0d1425;color:#f5f7ff;border:1px solid #394661;border-radius:12px;padding:14px;font:inherit}textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .sample{color:var(--accent);background:none;border:0;padding:8px 0;cursor:pointer;font:inherit}.submit{display:block;background:var(--accent);color:#101528;font-weight:750;border:0;padding:12px 18px;border-radius:11px;margin-top:12px;cursor:pointer;font:inherit}.submit:disabled{opacity:.6;cursor:wait}
+    .hint{color:var(--muted);font-size:.84rem}.result{white-space:pre-wrap;background:#0d1425;border:1px solid var(--line);padding:18px;border-radius:12px;min-height:110px}.trace{color:var(--green);font-size:.88rem}.trace pre{white-space:pre-wrap;color:#d7e0f4;background:#0b1120;padding:12px;border-radius:9px;overflow:auto}.sources a{color:#b4c2ff}.notice{color:#ffdb93;font-size:.86rem;margin-top:16px}.hidden{display:none}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}main{padding-top:30px}}
+  </style>
+</head>
+<body><main>
+  <div class="eyebrow">AI-3016 · Día 3</div>
+  <h1>Elegí una herramienta</h1>
+  <p class="intro">Escribe una consulta y observa cómo el asistente puede calcular, buscar en la web, consultar un documento o solicitar una acción simulada.</p>
+  <div class="layout">
+    <section class="panel"><div class="label">1 · Selecciona la herramienta</div><div class="tools" role="group" aria-label="Herramientas">
+      <button class="tool active" data-tool="code_interpreter">Code Interpreter<small>Cálculos y análisis</small></button>
+      <button class="tool" data-tool="web_search">Web Search<small>Información de la web</small></button>
+      <button class="tool" data-tool="file_search">File Search<small>Política ficticia de viajes</small></button>
+      <button class="tool" data-tool="function_calling">Function calling<small>Disponibilidad simulada</small></button>
+    </div><p class="notice">Function calling no confirma reservas. Los datos del demo son ficticios.</p></section>
+    <section class="panel"><label for="prompt">2 · Escribe tu consulta</label><textarea id="prompt" placeholder="Escribe una pregunta para la herramienta seleccionada…"></textarea>
+      <button id="sample" class="sample">Cargar prompt de ejemplo</button><button id="run" class="submit">Enviar consulta</button>
+      <p class="hint">La respuesta puede tardar unos segundos. Verifica los datos y las fuentes.</p>
+      <div id="status" class="hint" aria-live="polite"></div><div id="answer" class="result" aria-live="polite">La respuesta aparecerá aquí.</div>
+      <div id="trace" class="trace hidden"></div><div id="sources" class="sources hidden"></div>
+    </section>
+  </div>
+</main>
+<script>
+const prompts={
+ code_interpreter:"Calcula el total y el promedio mensual de estas ventas: enero 120000, febrero 155000 y marzo 141000 pesos argentinos. Explica brevemente el resultado y muestra las operaciones.",
+ web_search:"Busca tres actividades turísticas para hacer este fin de semana en Buenos Aires. Resume cada una e incluye las fuentes y fechas.",
+ file_search:"Según la política de viajes del documento, ¿con cuánta anticipación debo solicitar un cambio de reserva y cuál es el límite diario para comida? Indica también qué comprobante se necesita para el reembolso.",
+ function_calling:"Consulta si hay disponibilidad para una visita guiada en Buenos Aires el 2026-11-14 a las 10:00 para 2 personas. No hagas una reserva."
+};
+let selected="code_interpreter";const prompt=document.querySelector('#prompt'),answer=document.querySelector('#answer'),status=document.querySelector('#status');
+document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));b.classList.add('active');selected=b.dataset.tool}));
+document.querySelector('#sample').addEventListener('click',()=>prompt.value=prompts[selected]);
+document.querySelector('#run').addEventListener('click',async()=>{if(!prompt.value.trim()){status.textContent='Escribe una consulta primero.';return}const button=document.querySelector('#run');button.disabled=true;status.textContent='Consultando…';answer.textContent='';document.querySelector('#trace').classList.add('hidden');document.querySelector('#sources').classList.add('hidden');try{const r=await fetch('/api/demo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tool:selected,prompt:prompt.value})});const d=await r.json();if(!r.ok)throw new Error(d.error||'No se pudo completar la consulta.');answer.textContent=d.answer||'(Sin texto de respuesta)';if(d.trace?.length){const el=document.querySelector('#trace');el.innerHTML='<strong>Qué ocurrió</strong>'+d.trace.map(x=>'<div>'+x.step+(x.data===undefined?'':'<pre>'+JSON.stringify(x.data,null,2)+'</pre>')+'</div>').join('');el.classList.remove('hidden')}if(d.sources?.length){const el=document.querySelector('#sources');el.innerHTML='<strong>Fuentes</strong>'+d.sources.map(s=>'<p><a target="_blank" rel="noopener" href="'+encodeURI(s.url)+'">'+escapeHtml(s.title)+'</a></p>').join('');el.classList.remove('hidden')}status.textContent='Consulta completada.'}catch(e){answer.textContent=e.message;status.textContent='Revisa la configuración y vuelve a intentar.'}finally{button.disabled=false}});
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+</script></body></html>
