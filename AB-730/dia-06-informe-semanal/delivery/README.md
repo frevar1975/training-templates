@@ -1,4 +1,4 @@
-# Demo 1 — Informe de estado semanal
+> **Índice de los demos individuales:** consulta [README_Demos_Individuales.md](README_Demos_Individuales.md) para ver las guías completas de Outlook→Word, chat→Word y Excel→Word, las fuentes de práctica y los resultados esperados. Este README conserva el ejercicio anterior de Copilot Chat con cuatro archivos de SharePoint del Proyecto Atlas.\n\n# Demo 1 — Informe de estado semanal
 
 **Curso:** AB-730T00 · **Día:** 6 · **Herramienta:** Copilot Chat · **Duración:** 30 minutos
 
