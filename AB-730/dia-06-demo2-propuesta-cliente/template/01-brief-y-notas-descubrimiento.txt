@@ -1,0 +1,32 @@
+DEMO FICTICIO AB-730 — HORIZONTE LOGÍSTICA SRL
+Archivo 1 de 3: pedido del gerente y notas de descubrimiento
+
+MENSAJE DE TEAMS — MIÉRCOLES, 12:45
+Gerente (Shane): “¿Puedes preparar una presentación de propuesta para la reunión con Horizonte Logística de hoy a las 15:00? Usa las notas de descubrimiento, revisa los correos y la hoja Pricing. Necesitamos explicar una opción de piloto, alternativas de inversión y qué debemos confirmar. No prometas beneficios que no estén respaldados. Déjame revisar el borrador antes de compartirlo.”
+
+NOTAS DE DESCUBRIMIENTO — LUNES PASADO
+Participantes: Shane (desarrollo empresarial), Lucía (Operaciones, Horizonte Logística SRL) y Mateo (Finanzas, Horizonte Logística SRL).
+
+CONTEXTO COMPARTIDO POR EL CLIENTE
+- Horizonte Logística SRL es una empresa ficticia de logística con un centro de distribución.
+- El equipo estima que unas 45 personas trabajan en operaciones; entre 12 y 15 podrían participar inicialmente en un piloto. El número final de usuarios no está aprobado.
+- Los estados de los envíos se consultan hoy en distintos correos, mensajes y hojas de cálculo.
+- Lucía estima que preparar el informe operativo semanal toma alrededor de 3 horas. Es una estimación verbal, no una medición de línea base.
+- El equipo suele enterarse de algunos retrasos cuando recibe llamadas de seguimiento. No se compartió una medición del tiempo de detección ni del porcentaje de envíos afectados.
+- El cliente pidió comparar alternativas para 15 y 30 usuarios.
+- Finanzas quiere ver por separado el cargo mensual y el costo único de implementación; también quiere saber expresamente si los impuestos están incluidos.
+- El área de TI debe revisar seguridad, acceso y compatibilidad antes de que se apruebe cualquier piloto.
+
+POSIBILIDAD PARA DISCUTIR (NO ES UNA DECISIÓN DEL CLIENTE)
+Proponer un piloto de 90 días, en un centro, comenzando con hasta 15 usuarios. Usar la hoja de precios como escenario ilustrativo y confirmar alcance, usuarios y condiciones antes de emitir una cotización real.
+
+PREGUNTAS ABIERTAS PARA LA REUNIÓN
+1. ¿Qué fuentes de datos y sistemas participan hoy en el seguimiento de envíos?
+2. ¿Qué definición de “estado actualizado” y “retraso detectado” se utilizará?
+3. ¿Qué requisitos de seguridad y revisión de TI aplican?
+4. ¿Cuántos usuarios participarán finalmente y qué roles tendrán?
+5. ¿Qué fecha de inicio sería viable después de la revisión de TI?
+6. ¿Qué impuestos, moneda contractual y condiciones comerciales deben figurar en una cotización formal?
+
+LÍMITES DEL ESCENARIO
+No hay aprobación del cliente, línea base medida, fecha de inicio, resultado garantizado, integración confirmada, ROI validado ni permiso para presentar la hoja como cotización contractual. Todo nombre, cifra comercial y dato de esta práctica es ficticio.

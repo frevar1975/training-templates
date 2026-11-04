@@ -1,0 +1,42 @@
+DEMO FICTICIO AB-730 — HORIZONTE LOGÍSTICA SRL
+Archivo 2 de 3: correos de ejemplo
+
+CORREO 1
+De: Lucía Rojas, Operaciones — Horizonte Logística SRL
+Para: Shane
+Asunto: Lo que necesitamos ver en la propuesta
+Fecha: lunes, 10:18
+
+Hola Shane:
+Para la conversación del miércoles nos ayudaría ver una propuesta sencilla y visual. Hoy el equipo consulta correos, mensajes y hojas distintas para conocer el estado de los envíos. El informe operativo de los viernes nos lleva aproximadamente tres horas, aunque todavía no lo medimos de forma consistente.
+
+Nos interesa probar primero en el centro principal con un grupo pequeño. Como referencia, podrían ser hasta 15 personas; todavía debo confirmarlo con Operaciones. No quisiera que la presentación prometa una reducción de tiempos antes de medir el proceso actual.
+
+Saludos,
+Lucía
+
+CORREO 2
+De: Mateo Silva, Finanzas — Horizonte Logística SRL
+Para: Shane
+Asunto: Presentar costos del piloto
+Fecha: martes, 09:02
+
+Hola Shane:
+Por favor separa el costo de implementación del cargo mensual. Queremos comparar una alternativa para 15 personas y otra para 30. Indica con claridad la duración usada para calcular el total y si los impuestos están incluidos. Si algún valor es solo ilustrativo, déjalo señalado.
+
+Gracias,
+Mateo
+
+CORREO 3
+De: Lucía Rojas, Operaciones — Horizonte Logística SRL
+Para: Shane
+Asunto: Alcance y revisión de TI
+Fecha: martes, 16:40
+
+Una precisión: antes de hablar de una fecha de inicio, necesitamos que TI revise los requisitos de seguridad y el acceso a los datos. En esta primera conversación no estamos solicitando un portal para clientes ni una integración con el ERP. Incluye las preguntas que deberíamos resolver para decidir si avanzamos.
+
+Saludos,
+Lucía
+
+NOTA PARA EL EJERCICIO
+Estos mensajes son enteramente ficticios. No contienen direcciones reales, datos de clientes finales ni identificadores de envíos.

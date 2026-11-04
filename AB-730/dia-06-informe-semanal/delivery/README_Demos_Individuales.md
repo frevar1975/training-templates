@@ -60,3 +60,11 @@ Los tres demos individuales pueden ejecutarse sin Copilot Studio. Para configura
 
 - `template/`: fuentes de práctica y documento base para los alumnos.
 - `delivery/`: guías del instructor, resultados esperados e índice del paquete.
+
+
+## Demo 2 — Propuesta de cliente con varias fuentes
+
+**Flujo:** pedido de Teams + notas + correos + Excel → síntesis y validación en Copilot Chat → propuesta en Word → presentación en PowerPoint.
+
+- Paquete completo, fuentes ficticias y guía paso a paso: [`../../dia-06-demo2-propuesta-cliente/README.md`](../../dia-06-demo2-propuesta-cliente/README.md).
+- Este ejercicio multifuente se realiza manualmente y complementa los demos individuales. La guía del agente de Copilot Studio queda como tercer enfoque reutilizable.
