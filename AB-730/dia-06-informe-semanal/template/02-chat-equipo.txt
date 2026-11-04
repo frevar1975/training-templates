@@ -1,0 +1,7 @@
+Canal: #estado-proyecto-atlas
+
+Lunes, 2 nov., 09:12 — Priya: La integración de notificaciones quedó conectada al entorno de pruebas. Falta validar los casos de reintento.
+Lunes, 2 nov., 10:05 — Camden: El rastreador marca 70% completado. No cambiemos el porcentaje hasta cerrar la revisión de tareas.
+Martes, 3 nov., 14:20 — Luis: Creo que estamos cerca del 80%, pero todavía no actualicé el rastreador porque hay tareas duplicadas.
+Martes, 3 nov., 15:02 — Priya: El acceso de Marina al entorno sigue pendiente. Ya envié la solicitud a soporte.
+Miércoles, 4 nov., 11:30 — Camden: La prueba de aprobación depende de que Marina pueda entrar. Soporte todavía no dio una fecha.

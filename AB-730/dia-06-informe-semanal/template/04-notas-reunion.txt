@@ -1,0 +1,11 @@
+Reunión de sincronización — Proyecto Atlas
+Viernes, 30 de octubre de 2026
+
+Participantes: Camden, Priya, Luis
+
+- El equipo revisará el flujo de aprobación en el entorno de pruebas antes de la próxima revisión con el cliente.
+- Priya completó la conexión de notificaciones; falta validar los reintentos.
+- Luis seguirá trabajando en la configuración del flujo de aprobación.
+- Camden revisará las tareas duplicadas del rastreador antes de comunicar un porcentaje consolidado.
+- La revisión con el cliente está prevista para el 13 de noviembre, sujeta a confirmar el acceso al entorno de pruebas.
+- No se asignó una fecha para que soporte habilite el acceso.

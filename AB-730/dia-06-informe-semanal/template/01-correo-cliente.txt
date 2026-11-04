@@ -1,0 +1,11 @@
+Asunto: Seguimiento semanal del proyecto Atlas
+
+Hola, Camden:
+
+Gracias por la actualización del viernes. Para nuestra revisión del próximo viernes, necesitamos ver el flujo de aprobación de solicitudes funcionando en el entorno de pruebas. El equipo de operaciones podrá validar el proceso cuando tenga acceso.
+
+Por favor, indícanos si prevés algún bloqueo que pueda afectar esa revisión.
+
+Saludos,
+Marina López
+Cliente

@@ -1,0 +1,7 @@
+ID,Tarea,Responsable,Estado,Fecha objetivo,Notas
+A-101,Conectar notificaciones,Priya,Completada,2026-11-02,Conectada al entorno de pruebas
+A-102,Validar reintentos,Priya,En curso,2026-11-06,Faltan casos de reintento
+A-103,Configurar flujo de aprobación,Luis,En curso,2026-11-09,Prueba con usuario cliente pendiente
+A-104,Revisar tareas duplicadas,Camden,Pendiente,2026-11-05,Resolver antes de actualizar porcentaje global
+A-105,Habilitar acceso de cliente,Soporte,Pendiente,Sin fecha,Solicitud enviada; confirmación pendiente
+A-106,Preparar revisión del cliente,Camden,No iniciada,2026-11-13,Depende de validar flujo en pruebas
