@@ -2,6 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Día 3 · Menú interactivo",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/demo_interactivo.py",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
       "name": "Día 3 · 1 Code Interpreter",
       "type": "debugpy",
       "request": "launch",

@@ -1,19 +1,32 @@
 # AI-3016 · Día 3 · Demos de herramientas en VS Code
 
-Demos para explicar cuatro herramientas de la API de Responses. Están pensados para que el instructor los ejecute y muestre el flujo en pantalla; la clase no necesita programar.
+Una demo interactiva permite elegir la herramienta y escribir consultas propias. Los scripts individuales siguen disponibles como ejemplos guiados. La clase puede observar el flujo: no necesita programar.
 
-## Qué mostrar
+## Menú interactivo
 
-1. **Code Interpreter** — el modelo pide ejecutar un cálculo y obtiene el resultado.
-2. **Web Search** — el modelo consulta la web y puede devolver referencias a las fuentes.
-3. **File Search** — el modelo busca dentro de una política ficticia cargada a un vector store.
-4. **Function calling** — el modelo solicita una función; el programa local la ejecuta y devuelve el resultado. La función de este demo solo consulta disponibilidad ficticia: no realiza reservas.
+Abre la carpeta en VS Code, prepara el entorno siguiendo la sección siguiente y ejecuta:
+
+```powershell
+python demo_interactivo.py
+```
+
+El menú permite seleccionar:
+
+1. **Code Interpreter** — ejecuta cálculos y análisis.
+2. **Web Search** — busca información en la web y muestra referencias.
+3. **File Search** — responde con base en la política ficticia incluida en `demo-data`.
+4. **Function calling** — el modelo solicita una función local; la aplicación la ejecuta y devuelve el resultado.
+0. Salir.
+
+Después de elegir, escribe la consulta en el momento. Para File Search, pregunta por el contenido del documento. Para Function calling, pide consultar disponibilidad de una visita guiada e incluye fecha, hora y cantidad de personas. Esa función solo devuelve datos simulados: no crea una reserva.
+
+En VS Code, también puedes elegir **Día 3 · Menú interactivo** en Run and Debug y presionar **F5**.
 
 ## Preparación en VS Code (Windows / PowerShell)
 
 1. Instala Python 3.10 o superior y la extensión **Python** de Microsoft para VS Code.
 2. Abre esta carpeta en VS Code.
-3. En Terminal > New Terminal, crea un entorno e instala dependencias:
+3. En Terminal > New Terminal, crea el entorno e instala dependencias:
 
    ```powershell
    py -m venv .venv
@@ -23,15 +36,13 @@ Demos para explicar cuatro herramientas de la API de Responses. Están pensados 
 
 4. Copia `.env.example` a `.env` y completa:
    - `FOUNDRY_PROJECT_ENDPOINT`: endpoint del proyecto de Foundry, con forma `https://<recurso>.services.ai.azure.com/api/projects/<proyecto>`.
-   - `MODEL_DEPLOYMENT`: nombre exacto de tu deployment, por ejemplo `gpt-5.2`.
-   - Usa **una** forma de autenticación:
-     - `AZURE_OPENAI_API_KEY`: clave del recurso, si está habilitada para tu proyecto; o
+   - `MODEL_DEPLOYMENT`: nombre exacto del deployment, por ejemplo `gpt-5.2`.
+   - Usa una forma de autenticación:
+     - `AZURE_OPENAI_API_KEY`: clave del recurso, si está habilitada; o
      - inicia sesión con `az login` y deja vacía la clave para usar Microsoft Entra ID.
-5. Abre `.vscode/launch.json`; elige una de las cuatro configuraciones y presiona **F5**. También puedes ejecutar el archivo desde la terminal como se indica abajo.
+5. No subas `.env` ni compartas claves. El `.gitignore` de esta carpeta excluye ese archivo.
 
-> No subas el archivo `.env` ni compartas claves. El `.gitignore` de esta carpeta lo excluye.
-
-## Ejecución manual
+## Ejemplos guiados
 
 ```powershell
 python 01_code_interpreter.py
@@ -42,25 +53,25 @@ python 04_function_calling.py
 
 ## Guion breve para presentar
 
-- Antes de cada ejecución, pregunta a la clase qué tarea conviene delegar a una herramienta.
-- En VS Code, muestra el nombre de la herramienta y el prompt; ejecuta el demo y observa el resultado en la terminal.
-- Cierra con la diferencia: el modelo decide cuándo necesita una herramienta, pero la herramienta concreta realiza una tarea especializada.
-- En function calling, destaca que el modelo **no ejecutó la acción por su cuenta**: el programa atendió la llamada y devolvió datos. En un sistema real, una acción como reservar o pagar debería requerir validaciones y confirmación.
+- Pide a la clase que elija una herramienta según la necesidad.
+- Escribe una consulta sugerida por el grupo y observa la salida.
+- En Function calling, muestra el orden: el modelo pide la función, la aplicación ejecuta el código y el modelo redacta la respuesta final.
+- Aclara que el modelo no ejecuta por sí solo acciones externas. Una acción real, como reservar o pagar, debería tener validaciones y confirmación.
 
 ## Datos y costos
 
-- El archivo de búsqueda contiene una política de viaje **inventada para la clase**; no representa una política real.
-- Web Search consulta servicios externos. Code Interpreter y otros servicios pueden generar cargos al usarse; revisa el precio vigente y el presupuesto del proyecto antes de ejecutar.
-- File Search crea un vector store temporal. El script lo elimina al terminar; usa `--keep-store` para conservarlo y ver su ID. Si lo conservas, elimínalo después desde el portal o adapta el script para borrarlo.
-- Las respuestas del modelo pueden equivocarse. Para decisiones reales, verifica las fuentes y los datos.
+- El archivo de búsqueda contiene una política de viaje inventada para la clase.
+- Web Search consulta servicios externos. Code Interpreter y otros servicios pueden generar cargos; revisa el precio vigente y el presupuesto del proyecto antes de ejecutar.
+- File Search crea un vector store temporal y lo elimina al salir. Usa `python demo_interactivo.py --keep-store` para conservarlo; elimínalo después desde el portal.
+- Las respuestas del modelo pueden equivocarse. Verifica fuentes y datos antes de usarlos.
 
 ## Archivos
 
-| Archivo | Herramienta / propósito |
+| Archivo | Propósito |
 |---|---|
-| `01_code_interpreter.py` | Análisis sencillo de ventas ficticias |
-| `02_web_search.py` | Búsqueda web actual y fuentes |
-| `03_file_search.py` | Consulta de política ficticia |
-| `04_function_calling.py` | Llamada a una función local simulada |
+| `demo_interactivo.py` | Menú para seleccionar herramienta y escribir consultas |
+| `01_code_interpreter.py` | Ejemplo guiado de análisis de ventas ficticias |
+| `02_web_search.py` | Ejemplo guiado de búsqueda web |
+| `03_file_search.py` | Ejemplo guiado de búsqueda en la política ficticia |
+| `04_function_calling.py` | Ejemplo guiado de función local simulada |
 | `common.py` | Cliente y configuración compartidos |
-| `demo-data/politica_viajes_demo.txt` | Documento de prueba |
