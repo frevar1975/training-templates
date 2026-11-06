@@ -1,0 +1,21 @@
+AB-731 · PLANTILLA REUTILIZABLE · CASO DE ATENCIÓN AL CLIENTE
+
+Completa los campos entre corchetes para adaptar el caso a una organización. Usa datos ficticios o anonimizados.
+
+Organización: [nombre ficticio]
+Sector: [sector]
+Proceso de atención: [describir brevemente]
+Problema observado: [tarea lenta, repetitiva, costosa o propensa a errores]
+Personas afectadas: [clientes, empleados, áreas]
+Datos que estarán disponibles en el ejercicio: [describir]
+Datos que NO estarán disponibles: [describir]
+Restricciones: [sin promesas no confirmadas, sin datos personales reales, etc.]
+
+CASO DE CLIENTE
+Identificador: [CASO-001]
+Mensaje: [pegar consulta o reclamo ficticio]
+Contexto confirmado: [información confirmada]
+Información que debe verificarse: [datos faltantes]
+
+LÍMITES PARA EL ASISTENTE
+No inventar fechas, diagnósticos, compensaciones, compromisos ni acciones realizadas. Si falta información, decir qué debe verificar una persona autorizada.

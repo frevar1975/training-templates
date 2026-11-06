@@ -1,0 +1,20 @@
+PLANTILLA DE PROMPT PARA RESPUESTA AL CLIENTE
+
+Actúa como [rol]. Ayuda con [tarea concreta] usando únicamente el caso y el contexto incluidos abajo.
+
+Contexto confirmado:
+[pegar contexto confirmado]
+
+Caso:
+[pegar caso ficticio]
+
+Límites:
+- No inventes [fechas, causas, estados, compensaciones u otros].
+- Si falta información, indícala y explica qué debería verificar una persona autorizada.
+- No afirmes que realizaste una acción fuera de esta conversación.
+
+Formato de salida:
+1. Resumen
+2. Prioridad sugerida y motivo
+3. Borrador de respuesta
+4. Información pendiente de verificar
