@@ -1,0 +1,3 @@
+escenario,usuarios,consultas_por_usuario_mes,integracion,revision_humana
+Piloto pequeño,10,20,Manual o limitada,Muestra de respuestas
+Uso extendido,500,50,Con sistemas y datos empresariales,Casos de riesgo y excepciones

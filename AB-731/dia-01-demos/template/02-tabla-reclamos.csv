@@ -1,0 +1,6 @@
+id,dias_sin_servicio,reincidente,cliente_vulnerable,mensaje
+R-101,3,si,no,Sigo sin servicio y ya reclamé
+R-102,1,no,si,El servicio es necesario por un equipo médico
+R-103,5,no,no,No vinieron en la fecha indicada
+R-104,2,si,no,El problema volvió después de la visita
+R-105,4,no,no,Quiero saber cuándo se restablece el servicio
