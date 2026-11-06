@@ -1,6 +1,6 @@
 # AB-731 · Día 1 — Demos prácticos de IA para líderes empresariales
 
-Paquete de seis demos breves y sin código para conectar los fundamentos del AB-731 con un caso ficticio de atención al cliente. El material está pensado para la clase del 6 de noviembre de 2026 (18:00–20:00, hora de Bolivia) y acompaña las diapositivas 1–28 del PPT oficial 1.
+Paquete de seis demos breves y sin código para conectar los fundamentos del AB-731 con un caso ficticio de atención al cliente. El paquete es una base reutilizable para una clase de 120 minutos y acompaña las diapositivas 1–28 del PPT oficial 1. Ajustá la fecha y el horario en el repositorio de delivery de cada edición.
 
 ## Escenario común
 
@@ -27,6 +27,8 @@ Una empresa ficticia de servicios recibe reclamos y quiere mejorar la clasificac
 - Actividad grupal del Demo 4: 20 min.
 - Conceptos oficiales, preguntas y discusión de los Demos 2 y 5: 25 min.
 - Cierre: 10 min.
+
+En la guía del instructor, los bloques aparecen como tiempo transcurrido desde el inicio. Convertí esos bloques a horas locales en el paquete de la edición correspondiente.
 
 Los seis ejercicios están documentados para que el instructor pueda elegir. Ejecutar todos completos excede las dos horas; la ruta prioriza respuesta, prompt, revisión humana y una ficha grupal.
 
