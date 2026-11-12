@@ -24,6 +24,50 @@ No incluir contraseñas, tokens ni secretos en este documento.
 2. Confirmar que el workflow de despliegue está habilitado y que su identidad conserva los permisos necesarios.
 3. Abrir el repositorio y comprobar que existe la carpeta de contenido de consultas. Registrar el nombre del workflow y la rama exactos.
 
+## Comandos de aprovisionamiento (Git Bash)
+
+Estos comandos parten de una sesión iniciada con `az login`. Cambia los valores de ejemplo antes de reutilizar la plantilla. No pegues barras invertidas de PowerShell (`\`) como continuación de línea en Git Bash.
+
+~~~bash
+# 1. Seleccionar y confirmar la suscripción
+SUBSCRIPTION_ID="<subscription-id>"
+az account set --subscription "$SUBSCRIPTION_ID"
+az account show --query "{subscription:name, id:id, tenant:tenantId}" -o table
+
+# 2. Crear el grupo de recursos y el workspace
+az group create --name "<resource-group>" --location "<region>" -o table
+
+az monitor log-analytics workspace create \
+  --resource-group "<resource-group>" \
+  --workspace-name "<workspace-name>" \
+  --location "<region>" \
+  -o table
+
+# 3. Registrar el proveedor de Microsoft Sentinel
+az provider register --namespace Microsoft.SecurityInsights
+az provider show --namespace Microsoft.SecurityInsights --query registrationState -o tsv
+# Continuar cuando el resultado sea: Registered
+
+# 4. Habilitar Sentinel en el workspace
+az rest --method put \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<resource-group>/providers/Microsoft.OperationalInsights/workspaces/<workspace-name>/providers/Microsoft.SecurityInsights/onboardingStates/default?api-version=2025-09-01" \
+  --body '{"properties":{"customerManagedKey":false}}'
+
+# 5. Verificar el workspace y el onboarding
+az monitor log-analytics workspace show \
+  --resource-group "<resource-group>" \
+  --workspace-name "<workspace-name>" \
+  --query "{name:name, location:location, state:provisioningState}" \
+  -o table
+
+az rest --method get \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<resource-group>/providers/Microsoft.OperationalInsights/workspaces/<workspace-name>/providers/Microsoft.SecurityInsights/onboardingStates/default?api-version=2025-09-01" \
+  -o jsonc
+~~~
+
+**Importante:** la conexión del repositorio y la creación del workflow se realizan desde Microsoft Sentinel: **Content management → Repositories → Add new**. Esa conexión no se crea con los comandos de onboarding anteriores. Después de conectar el repo, confirmar que GitHub creó el workflow y que su rama/rutas coinciden con el contenido.
+
+Si el grupo o el workspace ya existen, usa los comandos `show` para comprobarlos en lugar de intentar elegir otro nombre.
 ## Demo paso a paso
 
 ### 1. Crear el contenido en GitHub
