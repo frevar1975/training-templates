@@ -122,6 +122,19 @@ Si el grupo o el workspace ya existen, usa los comandos `show` para comprobarlos
 
 Si no se inicia un run, verificar rama, rutas configuradas en el trigger del workflow y estado de Actions.
 
+
+
+### Verificación opcional de la consulta con Azure CLI
+
+Después de que Actions termine, se puede confirmar el recurso guardado en Log Analytics con una consulta REST de solo lectura:
+
+~~~bash
+az rest --method get \\
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<resource-group>/providers/Microsoft.OperationalInsights/workspaces/<workspace-name>/savedSearches/<nombre-interno>?api-version=2020-03-01-preview" \\
+  --query "{name:name, displayName:properties.displayName, category:properties.category, query:properties.query}" \\
+  -o yaml
+~~~
+
 ### 3. Confirmar el contenido en Sentinel
 
 1. Abrir el workspace correcto en Microsoft Sentinel.
