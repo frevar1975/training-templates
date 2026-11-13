@@ -1,5 +1,7 @@
 # SC-200 | Azure Activity -> Log Analytics -> Microsoft Sentinel
 
+**Demo paso a paso (conector Azure Activity y Azure Policy):** [DEMO-PASO-A-PASO.md](DEMO-PASO-A-PASO.md). Incluye la guía reutilizable y la consulta KQL. Este recorrido complementa el flujo de exportación mediante Diagnostic Settings descrito en esta página.
+
 **Preparación del ambiente:** [CREAR-AMBIENTE.md](CREAR-AMBIENTE.md).
 
 **Objetivo:** demostrar, de principio a fin, la ingestión de eventos administrativos de la suscripción Azure, su consulta en Log Analytics y la investigación mediante KQL en Microsoft Sentinel.
