@@ -1,43 +1,75 @@
-# Demo: alerta de seguridad en una VM Linux con Defender for Cloud y Sentinel
+# Demo SC-200: alerta Linux con Defender for Cloud y Sentinel
 
-Guía reutilizable para un laboratorio SC-200. La VM debe ser de prueba y estar protegida por Defender for Servers y Defender for Endpoint antes de generar una detección.
+Guía escalonada para comparar la ingesta de registros antes de activar Defender for Servers y una detección de endpoint después de activarlo.
 
-**Duración sugerida:** 35–50 minutos, más el aprovisionamiento del sensor.
+## Objetivo y alcance
 
-## Objetivo
+Primero se demuestra que AMA + una DCR pueden recopilar Syslog. Después se habilitan Defender for Servers y la integración con Defender for Endpoint para Linux, se valida el sensor y se genera una detección de prueba EICAR. Sentinel consulta la alerta si el conector está conectado al workspace correcto.
 
-Validar el recorrido de una detección segura de prueba: Defender for Endpoint detecta EICAR en Linux, Defender for Cloud presenta la alerta asociada al servidor y Microsoft Sentinel puede recibirla en `SecurityAlert` si el conector está operativo.
+AMA/DCR recopilan registros; no sustituyen a Defender for Endpoint ni detectan por sí solos la prueba de malware.
 
-Azure Monitor Agent (AMA) y una regla de recopilación de datos (DCR) recopilan registros como Syslog. No sustituyen al sensor de Defender for Endpoint ni generan por sí solos una alerta de malware.
+## Costos y alcance
 
-## Costos antes de empezar
+Defender for Servers es un plan facturable. Antes de activarlo, revisa en el portal el precio vigente, si hay una prueba disponible y cuántos servidores cubre la suscripción. La configuración a nivel de suscripción puede aplicar a varias máquinas. La VM, sus discos y red, y Log Analytics también pueden tener costos propios.
 
-Defender for Servers es un plan facturable. Antes de habilitarlo, revisa el precio vigente que muestra tu suscripción y cuántos servidores quedarán cubiertos. El ámbito de suscripción puede incluir más de una máquina. La VM, sus discos, red, Log Analytics y la ingesta o retención también pueden generar cargos.
+## Fase 0 — Demostrar ingesta sin habilitar Servers
 
-## Requisitos
+Mantén **Servers** desactivado durante esta fase.
 
-- Suscripción de Azure de laboratorio y permisos para configurar Defender for Cloud.
-- VM Linux desechable, sin datos de producción.
-- Workspace de Microsoft Sentinel, si se demostrará la consulta allí.
-- Conectividad HTTPS de la VM con los servicios de Defender for Endpoint.
-- Ubuntu 20.04 o posterior requiere Python 3 para el despliegue automático del sensor.
-
-## Pasos
-
-1. En **Microsoft Defender for Cloud → Environment settings → suscripción → Defender plans**, revisa el costo y el número de servidores. Habilita **Servers** solo si aceptas el cargo y el alcance mostrado.
-2. En **Monitoring coverage → Settings**, revisa **Endpoint protections**. Si faltan componentes de Linux, selecciona **Fix → Missing components → Linux machines → Enable**. Guarda y continúa.
-3. Espera la instalación del sensor. En la VM, confirma que la extensión `MDE.Linux` esté en estado `Succeeded`. Comprueba la protección en tiempo real:
+1. Comprueba que la VM Linux de laboratorio ya tenga Azure Monitor Linux Agent (AMA) y una DCR de Syslog asociada.
+2. Desde una sesión autorizada en la VM, envía un mensaje de prueba:
    ```bash
-   sudo mdatp health --field real_time_protection_enabled
+   logger -p local4.warning -t SC200-LINUX-DEMO 'Syslog antes de habilitar Defender for Servers'
    ```
-   Debe devolver `true`. AMA no reemplaza este sensor.
-4. Solo en la VM desechable de laboratorio, descarga el archivo EICAR de prueba:
-   ```bash
-   curl -O https://secure.eicar.org/eicar.com.txt
+3. En Sentinel → **Logs**, ejecuta:
+   ```kusto
+   Syslog
+   | where TimeGenerated > ago(1h)
+   | where ProcessName == "SC200-LINUX-DEMO"
+   | project TimeGenerated, Computer, Facility, SeverityLevel, SyslogMessage
+   | order by TimeGenerated desc
    ```
-   EICAR es una cadena inocua de prueba reconocida por productos antimalware. Defender puede bloquear o poner el archivo en cuarentena.
-5. En **Microsoft Defender for Cloud → Security alerts**, busca la alerta reciente y confirma que el recurso afectado corresponde a la VM del laboratorio.
-6. En el workspace correcto de Sentinel, consulta la tabla:
+4. Revisa las extensiones de la VM. En esta fase puede aparecer AMA, pero no se espera todavía el sensor `MDE.Linux`.
+5. No ejecutes EICAR ni presentes la prueba de Syslog como una alerta de Defender. Esta fase solo valida la recopilación.
+
+## Fase 1 — Habilitar protección de servidores
+
+Haz esta fase solo cuando quieras ejecutar la prueba de detección.
+
+1. Abre **Microsoft Defender for Cloud → Environment settings → suscripción → Defender plans**.
+2. Revisa el precio, la prueba disponible y el número/ámbito de servidores cubiertos. Guarda evidencia.
+3. Habilita **Servers** si aceptas el alcance y las condiciones de costo mostradas.
+4. En **Settings and monitoring**, deja **Endpoint protection** en **On**. Pulsa **Continue** y luego **Save**.
+5. Deja la VM encendida y espera la incorporación. La instalación puede tardar hasta una hora; en la primera integración Linux de la suscripción, puede tardar hasta 12 horas.
+
+## Fase 2 — Confirmar el sensor
+
+En PowerShell, reemplaza los marcadores por tu grupo de recursos y VM:
+
+```powershell
+az vm extension list --resource-group "<grupo>" --vm-name "<vm>" --query "[].{Nombre:name,Estado:provisioningState}" -o table
+```
+
+Continúa solo cuando aparezca `MDE.Linux` con estado `Succeeded`. Luego consulta la protección en tiempo real:
+
+```powershell
+az vm run-command invoke --resource-group "<grupo>" --name "<vm>" --command-id RunShellScript --scripts "sudo mdatp health --field real_time_protection_enabled" --query "value[0].message" -o tsv
+```
+
+El resultado debe indicar `true`. Si devuelve `mdatp: command not found`, todavía no está instalado: no ejecutes EICAR; espera y revisa el estado detallado de la extensión y los requisitos de la VM.
+
+## Fase 3 — Generar y revisar la detección
+
+Solo en una VM desechable de laboratorio:
+
+```bash
+curl -O https://secure.eicar.org/eicar.com.txt
+```
+
+EICAR es un archivo inocuo de prueba para validar detecciones antimalware. Defender puede bloquearlo o ponerlo en cuarentena.
+
+1. En Defender for Cloud → **Security alerts**, busca la alerta reciente y confirma que el recurso afectado es la VM de prueba.
+2. En Sentinel, usa el workspace conectado y consulta:
    ```kusto
    SecurityAlert
    | where TimeGenerated > ago(1d)
@@ -47,17 +79,17 @@ Defender for Servers es un plan facturable. Antes de habilitarlo, revisa el prec
    | project TimeGenerated, AlertName, AlertSeverity, ProductName, CompromisedEntity
    | order by TimeGenerated desc
    ```
-   Sustituye el marcador por el nombre de la VM. Si la alerta aparece en Defender for Cloud pero no en Sentinel, revisa el estado del conector, el workspace seleccionado y los permisos.
-7. Al terminar, si no necesitas cobertura continua, desactiva **Servers** y comprueba si quedan servidores cubiertos. Detén o elimina la VM solo si sabes que no se usa en otros laboratorios.
+3. Si aparece en Defender for Cloud pero no en Sentinel, revisa el estado del conector, el workspace y los permisos. Las alertas de ejemplo `Sample-VM` no prueban que la VM real esté protegida.
 
-La validación EICAR suele generar una alerta en unos minutos. Las alertas de ejemplo asociadas a recursos `Sample-VM` sirven para practicar consultas, pero no demuestran que una VM real esté protegida.
+## Fase 4 — Cerrar y controlar costos
 
-## Guion breve
-
-“AMA y la DCR recogen registros; Defender for Endpoint analiza la VM y detecta la prueba EICAR; Defender for Cloud muestra la alerta asociada al servidor; Sentinel puede centralizarla si el conector está activo. Defender for Servers tiene un costo: revisamos el precio y el alcance de cobertura antes de habilitarlo.”
+1. Conserva evidencia de la ingesta Syslog, sensor, alerta y consulta.
+2. Si no necesitas la protección continua, deshabilita **Servers** y guarda.
+3. Revisa la configuración a nivel de recurso y **Cost Management** para confirmar que no quede cobertura facturable.
+4. Detén o elimina la VM solo cuando confirmes que no se usa en otros laboratorios.
 
 ## Referencias oficiales
 
+- [Integración de Defender for Endpoint y tiempos de incorporación](https://learn.microsoft.com/azure/defender-for-cloud/enable-defender-for-endpoint)
 - [Validación de alertas](https://learn.microsoft.com/azure/defender-for-cloud/alert-validation)
-- [Integración de Defender for Endpoint](https://learn.microsoft.com/azure/defender-for-cloud/enable-defender-for-endpoint)
-- [Habilitar Defender for Servers](https://learn.microsoft.com/azure/defender-for-cloud/tutorial-enable-servers-plan)
+- [Deshabilitar planes y comprobar cargos](https://learn.microsoft.com/azure/defender-for-cloud/disable-plans)
