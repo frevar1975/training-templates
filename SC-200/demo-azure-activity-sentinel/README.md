@@ -1,5 +1,7 @@
 # SC-200 | Azure Activity -> Log Analytics -> Microsoft Sentinel
 
+**Preparación del ambiente:** [CREAR-AMBIENTE.md](CREAR-AMBIENTE.md).
+
 **Objetivo:** demostrar, de principio a fin, la ingestión de eventos administrativos de la suscripción Azure, su consulta en Log Analytics y la investigación mediante KQL en Microsoft Sentinel.
 
 **Duración sugerida:** 35–50 minutos. **Terminal:** Windows PowerShell 5.1 (NO Bash). **Costo:** Log Analytics puede cobrar ingestión y retención. Usar una suscripción de laboratorio.
